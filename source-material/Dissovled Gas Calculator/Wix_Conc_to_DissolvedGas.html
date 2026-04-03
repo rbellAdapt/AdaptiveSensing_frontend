@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parameter Input Table</title>
+    <style>
+         h1 {
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+            width: fit-content;
+            padding: 4px; /* Reduced padding to 0 */
+            margin: 0px; /* You might also want to reset margins */
+        }
+        h3 {
+            text-align: center;
+            width: fit-content;
+            padding: 4px; /* Reduced padding to 0 */
+            margin: 0px; /* You might also want to reset margins */
+        }
+
+         .input-container {
+             /* Input parnetn container Stack items vertically */
+            display: flex;
+            flex-direction: column;
+         }
+        .input-table-container {
+            flex-direction: row;
+            order: 1; /* Displayed first */
+            /* border: 2px dashed blue;  Visualize the container */
+            padding: 10px;
+        }
+        .button-container {
+            order: 2; /* Displayed first */
+            gap: 10px; /* Adjust the gap as needed */
+            margin-bottom: 10px; /* Add some space below the buttons */
+            margin-bottom: 20px; /* Add vertical space below the buttons */
+        }
+        table {
+            margin-top: 10px; /* Add vertical space above the table */
+            margin-bottom: 10px; /* Add vertical space below the table */
+            border-collapse: collapse;
+            font-size: 14px;
+            line-height: 1.0; /* Reduce line spacing */
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px; /* Reduce padding between text and cell border*/
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+
+        .name-col {
+            width: 140px;
+        }
+
+        .value-col {
+            width: 110px;
+        }
+
+        .unit-col {
+            width: 190px;
+        }
+
+         .name2-col {
+            width: 160px;
+        }
+
+        .value2-col {
+            width: 60px;
+        }
+
+        .unit2-col {
+            width: 90px;
+        }
+
+
+         .name3-col {
+            width: 160px;
+        }
+
+        .value3-col {
+            width: 80px;
+        }
+
+        .unit3-col {
+            width: 150px;
+        }
+
+        .result-container {
+            display: flex; /* Use flexbox to arrange tables horizontally */
+            flex-direction: row; /* Arrange items in a row */
+            align-items: flex-start; /* Align items to the top */
+            gap: 20px; /* Adjust the gap between tables as needed */
+        }
+
+
+       /* Column widths in gas entry table pixels */
+        .gasentry-columns col:nth-child(1) {
+            width: 140px; /* Fixed width for ID */
+        }
+        .gasentry-columns col:nth-child(2) {
+            width: 110px; /* Fixed width for ID */
+        }
+        .gasentry-columns col:nth-child(3) {
+            width: 190px; /* Fixed width for ID */
+        }
+
+
+        /*style for numeric entries in the seawater table*/
+        input[type="number"] {
+            border: none;
+            width: 95%;
+            padding: 1px;
+            box-sizing: border-box;
+            font-size: 12px
+        }
+
+        /* Style for Seawater dropdown boxes */
+        select {
+            font-size: 12px;
+            border: none; /* Remove border */
+            width: 95%;
+            padding: 0px;
+        }
+
+
+        #gasEntryTable input[type="number"] {
+            border: none;
+            width: 95%;
+            padding: 1px;
+            box-sizing: border-box;
+            font-size: 12px
+        }
+        /* Style for gas entry dropdown boxes (both gas name iand units*/
+        #gasEntryTable select {
+            font-size: 12px;
+            width: 95%;
+            padding: 0px;
+        }
+        #gasEntryTable th,
+        #gasEntryTable td {
+            font-size: 14px; /* Ensures all components within gasEntryTable have font size 14px */
+            padding: 4px; /* Reduce padding between text and cell border*/
+            border: 1px solid black;
+            text-align: left;
+        }
+
+    </style>
+    <script>
+        function createGasEntryTable(numRows = 6) {
+            const headers = ['Dry Gas Content', 'Value', 'Unit'];
+            const colgroupClassName = 'gasentry-columns'; // The desired class for colgroup
+            const table = document.createElement('table');
+            table.id = 'gasEntryTable';
+            const colgroup = document.createElement('colgroup');
+            colgroup.className = colgroupClassName;
+
+            for (let i = 0; i < headers.length; i++) {
+                const col = document.createElement('col');
+                colgroup.appendChild(col);
+            }
+
+            table.appendChild(colgroup);
+
+             // Default Gas lookup table
+            const gasLookup = [
+                { gas: "N2",   value: 513.6, units: "molarity"},
+                { gas: "O2",   value: 282.0, units: "molarity"},
+                { gas: "Ar",   value: 13.95, units: "molarity"},
+                { gas: "CO2",  value: 18.85, units: "molarity"},
+                { gas: "CH4",  value: 1.4878,  units: "molarity"},
+                { gas: "C2H6", value: 0.10863, units: "molarity"}
+            ];
+
+
+            // # NOAA atm  https://www.noaa.gov/jetstream/atmosphere
+            // # Nitrogen	N2	78.084%
+            // # Oxygen	O2	20.946%
+            // # Argon	Ar	0.934%
+            // # Carbon dioxide	CO2	0.042%
+            // # Neon	Ne	18.182 parts per million
+            // # Helium	He	5.24 parts per million
+            // # Methane	CH4	1.92 parts per million
+            // # Krypton	Kr	1.14 parts per million
+            // # Hydrogen	H2	0.55 parts per million
+            // # Nitrous oxide	N2O	0.33 parts per million
+            // # Carbon monoxide	CO	0.10 parts per million
+            // # Xenon	Xe	0.09 parts per million
+            // # Ozone	O3	0.07 parts per million
+            // # Nitrogen dioxide	NO2	0.02 parts per million
+            // # Iodine	I2	0.01 parts per million
+
+
+            // Create table header
+            const headerRow = table.insertRow();
+
+            headers.forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+
+            // Create the gas content table rows
+            for (let i = 0; i < numRows; i++) {
+                let row = table.insertRow();
+
+               // Gas Selection Cell
+                let gasSelectionCell = row.insertCell();
+                let gasSelection = document.createElement('select');
+                gasSelection.id = `gasSelection${i}`;
+                gasSelection.innerHTML = `
+                    <option value="N2">Nitrogen</option>
+                    <option value="O2">Oxygen</option>
+                    <option value="Ar">Argon</option>
+                    <option value="CO2">Carbon Dioxide</option>
+                    <option value="CH4">Methane</option>
+                    <option value="C2H6">Ethane</option>
+                    <option value="C3H8">Propane</option>
+                    <option value="nC4H10">nButane</option>
+                    <option value="He">Helium</option>
+                    <option value="Ne">Neon</option>
+                    <option value="Kr">Krypton</option>
+                    <option value="Xe">Xenon</option>
+                    <option value="H2">Hydrogen</option>
+                    <option value="CO">Carbon Dioxide</option>
+                `;
+                gasSelection.value = gasLookup[i].gas; // Set default gas from lookup
+                gasSelection.onchange = getGasAllConcs; // Add onchange attribute
+                gasSelectionCell.appendChild(gasSelection);
+
+                 // Value Cell
+                let valueCell = row.insertCell();
+                let valueInput = document.createElement('input');
+                valueInput.type = 'number';
+                valueInput.id = `gasValue${i}`;
+                valueInput.value = gasLookup[i].value; // Set default value from lookup
+                valueInput.onchange = getGasAllConcs; // Add onchange attribute
+                valueCell.appendChild(valueInput);
+
+
+                // Gas Units Cell
+                let gasUnitsCell = row.insertCell();
+                let gasUnits = document.createElement('select');
+                gasUnits.id = `gasUnits${i}`;
+                gasUnits.innerHTML = `
+                        <option value="molarity">µmol/L (molarity)</option>
+                        <option value="molinity">µmol/kg-soln (molinity)</option>
+                        <option value="molality">µmol/kg-H2O (molality)</option>
+                        <option value="ppm">mg/kg (ppm)</option>
+                        <option value="ppb">µg/kg (ppb)</option>
+                        <option value="ppt">ng/kg (ppt)</option>
+
+                `;
+                gasUnits.value = gasLookup[i].units; // Set default units from lookup
+                gasUnits.onchange = getGasAllConcs;
+                gasUnitsCell.appendChild(gasUnits);
+            }
+
+            // Insert the table into the document, below the first table
+            const existingTable = document.querySelector('table');
+            existingTable.parentNode.insertBefore(table, existingTable.nextSibling);
+        }
+
+        function addRow() {
+            const table = document.getElementById('gasEntryTable');
+            const numRows = table.rows.length - 1; // Exclude header row
+            const newRowIndex = numRows + 1;
+
+            const row = table.insertRow();
+
+
+
+            // Gas Selection Cell
+            const gasSelectionCell = row.insertCell();
+            const gasSelection = document.createElement('select');
+            gasSelection.id = `gasSelection${newRowIndex - 1}`;
+
+            gasSelection.innerHTML = `
+                    <option value="N2">Nitrogen</option>
+                    <option value="O2">Oxygen</option>
+                    <option value="Ar">Argon</option>
+                    <option value="CO2">Carbon Dioxide</option>
+                    <option value="CH4">Methane</option>
+                    <option value="C2H6">Ethane</option>
+                    <option value="C3H8">Propane</option>
+                    <option value="nC4H10">nButane</option>
+                    <option value="He">Helium</option>
+                    <option value="Ne">Neon</option>
+                    <option value="Kr">Krypton</option>
+                    <option value="Xe">Xenon</option>
+                    <option value="H2">Hydrogen</option>
+                    <option value="CO">Carbon Monoxide</option>
+            `;
+            gasSelection.value = "C2H6";
+            gasSelection.onchange = getGasAllConcs; // Add onchange attribute
+            gasSelectionCell.appendChild(gasSelection);
+
+             // Value Cell
+            const valueCell = row.insertCell();
+            const valueInput = document.createElement('input');
+            valueInput.type = 'number';
+            valueInput.id = `gasValue${newRowIndex - 1}`;
+            valueInput.value = 0.1;
+            valueInput.onchange = getGasAllConcs; // Add onchange attribute
+            valueCell.appendChild(valueInput);
+
+            // Gas Units Cell
+            const gasUnitsCell = row.insertCell();
+            const gasUnits = document.createElement('select');
+            gasUnits.id = `gasUnits${newRowIndex - 1}`;
+            gasUnits.innerHTML = `
+                    <option value="molarity">µmol/L (molarity)</option>
+                    <option value="molinity">µmol/kg-soln (molinity)</option>
+                    <option value="molality">µmol/kg-H2O (molality)</option>
+                    <option value="ppm">mg/kg (ppm)</option>
+                    <option value="ppb">µg/kg (ppb)</option>
+                    <option value="ppt">ng/kg (ppt)</option>
+            `;
+            gasUnits.value = "molarity";
+            gasUnits.onchange = getGasAllConcs;
+            gasUnitsCell.appendChild(gasUnits);
+            getGasAllConcs()
+        }
+
+        function deleteRow() {
+            const table = document.getElementById('gasEntryTable');
+            const numRows = table.rows.length;
+
+            if (numRows > 2) { // Prevent deleting header row and the initial row
+                table.deleteRow(numRows - 1);
+            }
+            getGasAllConcs()
+        }
+
+        function displayMessage(message) {
+            document.getElementById('messageBox').value = message;
+        }
+
+        function displayDebugBox(message) {
+            document.getElementById('debugBox').value = message;
+        }
+
+
+        function getMoleFractions() {
+
+            const table = document.getElementById('gasEntryTable');
+            const swtable = document.getElementById('seawaterConditionsTable');
+            let balanceMoleFraction = 1;
+            let displayString = "";
+            let moleFractions = [];
+            let gasAllNames = [];
+
+            const balGasName = swtable.rows[5].cells[2].querySelector('select').value
+
+
+            if (!table) {
+                displayMessage("Table not found.");
+                return false
+            }
+            gasNamesList=[]
+            for (let i = 1; i < table.rows.length; i++) {  // Start from 1 to skip the header row
+                const row = table.rows[i];
+                const nameSelect = row.cells[0].querySelector('select');
+                const valueInput = row.cells[1].querySelector('input[type="number"]');
+                const unitSelect = row.cells[2].querySelector('select');
+
+                const value = parseFloat(valueInput.value);
+                const name = nameSelect.value;
+                const unit = unitSelect.value;
+
+                gasNamesList.push(name)
+
+
+                if (isNaN(value)) {
+                    displayMessage(`Invalid value in row ${i}.`);
+                    return false;
+                }
+
+                let moleFraction;
+                switch (unit) {
+                    case "Mole Fraction":
+                        moleFraction = value;
+                        break;
+                    case "Percent":
+                        moleFraction = value / 100;
+                        break;
+                    case "ppthv":
+                        moleFraction = value / 1e3;
+                        break;
+                    case "ppmv":
+                        moleFraction = value / 1e6;
+                        break;
+                    case "ppbv":
+                        moleFraction = value / 1e9;
+                        break;
+                    case "pptv":
+                        moleFraction = value / 1e12;
+                        break;
+                    default:
+                        displayMessage(`Unknown unit in row ${i}.`);
+                        return false;
+                }
+                moleFractions.push(moleFraction);
+                gasAllNames.push(name);
+
+                balanceMoleFraction -= moleFraction;
+               // displayString += `Row ${i}: ${value} ${unit} = ${moleFraction.toFixed(6)}\n`;
+            }
+
+              const nameCounts = {};
+
+              for (const name of gasNamesList) {
+                if (nameCounts[name]) {
+                  nameCounts[name]++;
+                } else {
+                  nameCounts[name] = 1;
+                }
+              }
+
+              for (const name in nameCounts) {
+                if (nameCounts[name] > 1) {
+                  displayMessage(`Duplicate "${name}" found. Please rename.`);
+                  return false; // Indicate that there are duplicate names
+                }
+              }
+
+
+            if (balanceMoleFraction < 0) {
+                displayMessage("Error: Sum of gases is more than 100%");
+                return false;
+            }
+            moleFractions.push(balanceMoleFraction);
+            gasAllNames.push(balGasName);
+
+            displayString += `Balance Gas: ${100*balanceMoleFraction.toFixed(4)} %`;
+            displayMessage(displayString);
+
+            getPartialPressures(moleFractions,gasAllNames)
+            return true;
+
+        }
+
+        function getGasAllConcs(){
+            const table = document.getElementById('gasEntryTable');
+
+            if (!table) {
+                displayMessage("Table not found.");
+                return false
+            }
+
+            let gasAllNames=[];
+            let gasAllConcs = [];
+            let gasAllunits = [];
+
+            for (let i = 1; i < table.rows.length; i++) {  // Start from 1 to skip the header row
+                const row = table.rows[i];
+                const nameSelect = row.cells[0].querySelector('select');
+                const valueInput = row.cells[1].querySelector('input[type="number"]');
+                const unitSelect = row.cells[2].querySelector('select');
+
+                const value = parseFloat(valueInput.value);
+                const name = nameSelect.value;
+                const unit = unitSelect.value;
+
+                gasAllNames.push(name)
+                gasAllunits.push(unit)
+
+                                if (isNaN(value)) {
+                    displayMessage(`Invalid value in row ${i}.`);
+                    return false;
+                }
+                gasAllConcs.push(value)
+
+
+            }
+            console.log(gasAllNames)
+            console.log(gasAllConcs)
+            console.log(gasAllunits)
+
+
+
+
+            getPartialPressures(gasAllNames, gasAllConcs, gasAllunits)
+            return true;
+        }
+
+         function getPartialPressures(gasAllNames, gasAllConcs, gasAllUnits) {
+            //displayDebugBox(moleFractions);  const valueInput = row.cells[1].querySelector('input[type="number"]');
+
+            const table2 = document.getElementById('seawaterConditionsTable');
+
+            const temp = table2.rows[1].cells[1].querySelector('input[type="number"]').value
+            const tempUnits = table2.rows[1].cells[2].querySelector('select').value
+            const salt = table2.rows[2].cells[1].querySelector('input[type="number"]').value
+            const saltUnits = table2.rows[2].cells[2].querySelector('select').value
+            const atmPress = table2.rows[3].cells[1].querySelector('input[type="number"]').value
+            const atmPressUnits = table2.rows[3].cells[2].querySelector('select').value
+            const reportingUnits = table2.rows[4].cells[2].querySelector('select').value
+
+             const postData = {
+                 temp: temp,
+                 tempUnits: tempUnits,
+                 salt: salt,
+                 saltUnits: saltUnits,
+                 atmPress: atmPress,
+                 atmPressUnits: atmPressUnits,
+                 reportingUnits: reportingUnits,
+                 gasAllNames: gasAllNames,
+                 gasAllConcs: gasAllConcs,
+                 gasAllUnits: gasAllUnits
+            };
+
+            let apiUrl;
+            //apiUrl = 'http://127.0.0.1:5000/bca-partial-pressure-calculator';
+            apiUrl = 'https://ryanbell4.pythonanywhere.com/bca-partial-pressure-calculator';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                mode: 'cors', // Set the mode here, no-cors, when it complains about cors, it is usually uncompilable code on server
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // document.getElementById("debugBox").value = JSON.stringify(data, null, 2);
+
+
+                // get the first table
+                const table1 = document.getElementById("swPropertiesResultsTable");
+                while (table1.rows.length > 1) {
+                    table1.deleteRow(1); // Delete the second row (index 1) repeatedly
+                }
+                const orderedKeys1 = [
+                    'IS_Temp_C',
+                    'Pot_T_ITS90',
+                    'Cons_T_ITS90',
+                    'Prac_Sal_psu',
+                    'Abs_Sal_g_kg',
+                    'IS_Density',
+                    'Chlorinity_g_kg',
+                    'Ionic_strength_mol_kg_sw',
+                    'Press_dbar',
+                    'Depth_m',
+                    'VelofSound_m_s',
+                    'HeatCap_J_gK',
+                    'VP_atm'
+                ];
+
+                for (const key of orderedKeys1) {
+                    let row = table1.insertRow();
+
+                    let nameCell = row.insertCell();
+                    nameCell.textContent = data[key]['nice name'];
+                    let valueCell = row.insertCell();
+                    valueCell.textContent = data[key]['value'];
+                    let unitsCell = row.insertCell();
+                    unitsCell.textContent = data[key]['units'];
+                }
+
+                // get the Second table
+                const table2 = document.getElementById("partialPressureGasResultsTable");
+
+                while (table2.rows.length > 1) {
+                    table2.deleteRow(1); // Delete the second row (index 1) repeatedly
+                }
+
+                const partialPressureGasArray = data["partialP"]['value'];
+                const niceNameArray = data["partialP"]['nice name'];
+                const units = data["partialP"]['units'];
+
+
+
+                // Iterate through the array
+                const partialPressureGasArraySize = partialPressureGasArray.length;// Get the size of partialPressureGasArray
+                console.log(partialPressureGasArraySize)
+                partialPressureGasArray.forEach((item, index) => {
+                    console.log(index)
+                    let row = table2.insertRow();
+
+                    let nameCell = row.insertCell();
+                    const niceNameKey = niceNameArray[index];
+                    let label = "N/A"; // Default label
+
+                    // Iterate through the dropdown options to find a match
+                    if (gasSelection0) {  // Make sure dropdown exist
+                        for (let i = 0; i < gasSelection0.options.length; i++) {
+                            const option = gasSelection0.options[i];
+                            if (option.value === niceNameKey) {
+                                // if(index === partialPressureGasArraySize-1) {
+                                //     label = option.label + " (Balance)";
+                                // }
+                                // else {
+                                    label = option.label; // Get the label from the matching optio
+                                // }
+                                break; // Exit the loop once a match is found
+                            }
+                        }
+                    } else {
+                        console.error("Dropdown element with ID 'gasSelection0' not found.");
+                    }
+                    nameCell.textContent = label; // Set the label in the table cell
+
+                    let valueCell = row.insertCell();
+                    valueCell.textContent = item; // Assuming 'value' is a property in your object
+
+                    let unitsCell = row.insertCell();
+                    const unitKey = units;
+                    let unitLabel = "N/A"; // Default label
+                    // Iterate through the dropdown options to find a match
+                    if (resultUnits) {  // Make sure dropdown exist
+                        for (let i = 0; i < resultUnits.options.length; i++) {
+                            const option = resultUnits.options[i];
+                            if (option.value === unitKey) {
+                                unitLabel = option.label; // Get the label from the matching option
+                                break; // Exit the loop once a match is found
+                            }
+                        }
+                    } else {
+                        console.error("Dropdown element with ID 'resultUnits' not found.");
+                    }
+                    unitsCell.textContent = unitLabel; // Assuming 'units' is a property in your object
+                });
+
+                // nameCell.textContent = data['Saturation_Percent']['nice name'];
+                // valueCell.textContent = data['Saturation_Percent']['value'];
+                // unitsCell.textContent = data['Saturation_Percent']['units'];
+                let totalSatSentence = "Total Pressure is " + data['Saturation_Percent']['value'] +
+                " " + data['Saturation_Percent']['units'] + " saturated.";
+                displayMessage(totalSatSentence);
+            })
+             .catch(error => {
+                // document.getElementById("responseBox").value = "Error: " + error;
+             });
+     }
+
+
+    // Call the function to create the table when the page loads
+    window.onload = function() {
+        createGasEntryTable();
+        displayMessage("ok!");
+        getGasAllConcs()
+    };
+    </script>
+</head>
+<body>
+
+
+    <div class="input-container">
+
+        <div class="input-table-container">
+            <h2 id = "input-table-header">Inputs</h2>
+            <table id="seawaterConditionsTable">
+                <colgroup>
+                    <col class="name-col">
+                    <col class="value-col">
+                    <col class="unit-col">
+                </colgroup>
+                <tr>
+                    <th>Conditions</th>
+                    <th>Value</th>
+                    <th>Unit</th>
+                </tr>
+                <tr>
+                    <td>Temperature</td>
+                    <td><input type="number" id="temp" value="10" onchange="getGasAllConcs()"></td>
+                    <td>
+                        <select id="tempUnit" onchange="getGasAllConcs()">
+                            <option value="celsius90">°C (ITS-90)</option>
+                            <option value="kelvin">K</option>
+                            <option value="fahrenheit">°F</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dissolved Salts</td>
+                    <td><input type="number" id="salts" value="35" onchange="getGasAllConcs()"></td>
+                    <td>
+                        <select id="saltsType" onchange="getGasAllConcs()">
+                            <option value="Salinity(PSS_78)">Salinity (PSS-78)</option>
+                            <option value="IonicStrength(mol_kg_H2O)">Ionic Strength (mol/kg-soln)</option>
+                            <option value="IonicStrength(mol_kg_soln)">Ionic Strength (mol/kg-H2O)</option>
+                            <option value="Conductivity(mS_cm)">Conductivity (mS/cm)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Atm. Pressure</td>
+                    <td><input type="number" id="pressure" value="101325" onchange="getGasAllConcs()"></td>
+                    <td>
+                        <select id="pressureUnits" onchange="getGasAllConcs()">
+                            <option value="Pa">Pa</option>
+                            <option value="kPa">kPa</option>
+                            <option value="hPa">hPa</option>
+                            <option value="atm">atm</option>
+                            <option value="mbar">mbar</option>
+                            <option value="inHg">inHg</option>
+                        </select>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>Reporting Units</td>
+                    <td></td>
+                    <td>
+                        <select id="resultUnits" onchange="getGasAllConcs()">
+                            <option value="Mole Fraction">Mole Fraction</option>
+                            <option value="Percent" selected>%</option>
+                            <option value="ppthv">ppthv (‰)</option>
+                            <option value="ppmv">ppmv (μatm)</option>
+                            <option value="ppbv">ppbv (natm)</option>
+                            <option value="pptv">pptv</option>
+                        </select>
+                    </td>
+                </tr>
+<!--                <tr>-->
+<!--                    <td>Balance Gas</td>-->
+<!--                    <td></td>-->
+<!--                    <td>-->
+<!--                        <label for="balanceGasUnits"></label>-->
+<!--                        <select id="balanceGasUnits" onchange="getGasAllConcs()">-->
+<!--                            <option value="N2">Nitrogen</option>-->
+<!--                            <option value="O2">Oxygen</option>-->
+<!--                            <option value="Ar">Argon</option>-->
+<!--                            <option value="CO2">Carbon Dioxide</option>-->
+<!--                            <option value="CH4">Methane</option>-->
+<!--                            <option value="C2H6">Ethane</option>-->
+<!--                            <option value="C3H8">Propane</option>-->
+<!--                            <option value="nC4H10">nButane</option>-->
+<!--                            <option value="He">Helium</option>-->
+<!--                            <option value="Ne">Neon</option>-->
+<!--                            <option value="Kr">Krypton</option>-->
+<!--                            <option value="Xe">Xenon</option>-->
+<!--                            <option value="H2">Hydrogen</option>-->
+<!--                            <option value="CO">Carbon Monoxide</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+<!--                </tr>-->
+            </table>
+        </div>
+        <div class="button-container">
+            <button onclick="addRow()">Add Row</button>
+            <button onclick="deleteRow()">Delete Row</button>
+<!--            <button onclick="getGasAllConcs()">Calculate</button>-->
+            <input type="text" id="messageBox" readonly style="width: 275px;
+             border:none; background-color: lightgrey;margin-left: 10px;">
+
+        </div>
+    </div>
+<!--        <div class="test-container">-->
+<!--            <input type="text" id="debugBox" readonly style="width: 1200px;height:100px;overflow-wrap: break-word;-->
+<!--                     border:none; background-color: lightgrey;margin-left: 10px;">-->
+<!--        </div>-->
+        <h2>Results</h2>
+        <div class="result-container">
+
+            <div class="swPropertiesResultsTable-container">
+                <h3>Seawater Properties</h3>
+                <table id="swPropertiesResultsTable">
+                    <colgroup>
+                        <col class="name2-col">
+                        <col class="value2-col">
+                        <col class="unit2-col">
+                    </colgroup>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="partialPressureGasResultsTable-container">
+                <h3>Dry Partial Pressure</h3>
+                <table id="partialPressureGasResultsTable">
+                    <colgroup>
+                        <col class="name3-col">
+                        <col class="value3-col">
+                        <col class="unit3-col">
+                    </colgroup>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+</body>
+</html>
