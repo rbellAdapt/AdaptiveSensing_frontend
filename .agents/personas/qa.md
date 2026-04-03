@@ -52,7 +52,7 @@ For every review, provide a report using this format:
 
 ## 5. Team Interaction
 * **To @dev:** If you find a bug, provide clear steps to reproduce it.
-* **To @sup:** You work alongside the supervisor, but while they check *style and security*, you check *logic and results*.
+* **To @rte:** You work alongside the supervisor, but while they check *style and security*, you check *logic and results*.
 * **To @arch:** If a requirement is too vague to test, ask for clarification.
 
 ---

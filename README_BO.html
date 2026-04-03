@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The AI Software Factory: BO Manual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-primary: #58a6ff;
+            --accent-secondary: #1f6feb;
+            --alert-red: #f85149;
+            --alert-orange: #d29922;
+            --success-green: #3fb950;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0;
+            animation: slideInUp 0.6s forwards ease-out;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+            border-color: var(--accent-primary);
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+        .section:nth-child(7) { animation-delay: 0.6s; }
+        .section:nth-child(8) { animation-delay: 0.7s; }
+        .section:nth-child(9) { animation-delay: 0.8s; }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h2 span.icon {
+            margin-right: 12px;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 4px solid var(--accent-primary);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .code-example {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #79c0ff;
+            margin: 15px 0;
+            display: block;
+            overflow-x: auto;
+        }
+
+        .pill {
+            display: inline-block;
+            background: var(--border-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            color: #ff7b72;
+            margin: 0 4px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .agent-link {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏭 The AI Software Factory</h1>
+            <div class="subtitle">Business Owner (<span class="agent-link">@bo</span>) Manual & Solution Manager Guide</div>
+            <p style="margin-top:20px; font-size:1.05rem;">
+                Welcome to your AI-driven Agile Release Train (ART). You are no longer a solitary developer; you are the Business Owner and Solution Manager of a synthetic software factory. This environment is governed by strict roles, immutable file locks, and automated workflows. Your job is to inject Epics (high-level vision), tune the AI engines, and clear strategic roadblocks. Do not write code. Orchestrate.
+            </p>
+        </header>
+
+        <div class="section">
+            <h2><span class="icon">👥</span> 1. The Factory Setup (Agent Skills)</h2>
+            <p>You interact with 8 specialized agents. Cross-contamination is strictly forbidden by the system's Write-Access Matrix.</p>
+            
+            <h3>The Leadership Triad (Your Direct Reports)</h3>
+            <ul>
+                <li><strong><span class="agent-link">@prod</span> (Product Manager)</strong>: Focused on R&D, academic literature synthesis, and value streams.</li>
+                <li><strong><span class="agent-link">@arch</span> (System Architect)</strong>: Translates vision into blueprints. The only agent allowed to write to <span class="pill">docs/implementation_plan.md</span> and <span class="pill">docs/session_history.md</span>.</li>
+                <li><strong><span class="agent-link">@rte</span> (Release Train Engineer)</strong>: An invisible background daemon. Acts as the Scrum Master to enforce rules and handoffs. Will only speak to you if the system deadlocks.</li>
+            </ul>
+
+            <h3>The Execution Team (The Factory Floor)</h3>
+            <ul>
+                <li><strong><span class="agent-link">@dev</span> (Lead Developer)</strong>: Writes the actual code. Locked strictly to the <span class="pill">src/</span> directory.</li>
+                <li><strong><span class="agent-link">@sme</span> (Subject Matter Expert)</strong>: The scientific/math consultant. Verifies algorithmic fidelity and physics logic. Read-only.</li>
+                <li><strong><span class="agent-link">@qa</span> (QA Engineer)</strong>: Writes test suites. Locked strictly to the <span class="pill">tests/</span> directory.</li>
+                <li><strong><span class="agent-link">@brand</span> (Brand Specialist)</strong>: Audits UI, UX, and copy. Read-only.</li>
+                <li><strong><span class="agent-link">@ops</span> (DevSecOps)</strong>: Manages infrastructure, security, <span class="pill">.gitignore</span> payload hygiene, and Git terminal executions.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">📜</span> 2. The Core Rules & Protocols</h2>
+            <p>The factory operates efficiently because the AI is bound by unbending rules (stored in <span class="pill">.agents/rules/</span>):</p>
+            <ul>
+                <li><strong>The Write-Access Matrix:</strong> Agents physically cannot modify files outside their domain. @dev cannot fix tests; @qa cannot fix code.</li>
+                <li><strong>The Silent Chain-of-Thought (SCoT) Log:</strong> Agents must write their step-by-step reasoning to <span class="pill">docs/logs/thought_trace.md</span> before coding. They are physically barred from reading it back to prevent memory bloat. If you don't understand an AI's decision, read its mind here.</li>
+                <li><strong>The Two-Strike Escalation:</strong> If @dev fails an audit from @sme, @qa, or @brand twice, @rte pauses the system and asks @bo for a tie-breaking decision to prevent infinite API billing loops.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">⚡</span> 3. The /dir Workflow (Direct Execution)</h2>
+            <p>In a heavy Agile pipeline, waking up @arch, @qa, and @rte to change a button color or run a simple Python script wastes massive compute. You can bypass the entire bureaucracy instantly using the <strong>/dir</strong> slash command.</p>
+            
+            <div class="highlight-box">
+                <strong>What it does:</strong> It triggers the <span class="pill">direct-execution.md</span> workflow. It forces all non-targeted agents to go to sleep, disables blueprinting, and grants the targeted agent temporary autonomy to execute your command immediately.<br/><br/>
+                <strong>Auto-Resume:</strong> The moment your next prompt doesn't contain /dir, the full Agile factory automatically wakes back up.
+            </div>
+
+            <h3>Example Scenarios for /dir:</h3>
+            <ul>
+                <li><strong>Cosmetic Fast-Track:</strong> <span class="code-example">"/dir @dev and @brand: Update header.tsx padding to p-4 and do a quick Vibe Check."</span></li>
+                <li><strong>Ops Hotfix:</strong> <span class="code-example">"/dir @ops: The Nginx container is failing. Change the port mapping in docker-compose from 80 to 8080 and push the fix."</span></li>
+                <li><strong>Academic Brainstorm:</strong> <span class="code-example">"/dir @prod and @sme: Let's discuss the viability of using a Monte Carlo simulation for this next Epic. Just give me your thoughts, no blueprints yet."</span></li>
+                <li><strong>Micro-Script:</strong> <span class="code-example">"/dir @dev: Write a standalone 15-line Python script in the root directory to parse this CSV. Do not touch src/."</span></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">🗣️</span> 4. Operating the Factory (Standard Usage)</h2>
+            <p>When you aren't using /dir for micro-tasks, you use the standard Chain of Command to build major features.</p>
+            <div class="highlight-box">
+                <strong>Epic Injection (The Standard Flow):</strong>
+                <div class="code-example">"@arch and @prod: We need a new feature to visualize atmospheric drag in real-time. @prod, define the value stream. @arch, draft the implementation plan. Once locked, @dev and @sme may begin execution."</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">🔄</span> 5. Automated Workflows (Antigravity Syncs)</h2>
+            <p>Your workspace includes three atomic Git workflows (stored in <span class="pill">.agents/workflows/</span>). You trigger these by typing their names into the chat.</p>
+            <ul>
+                <li><strong>session-end-atomic-git.md:</strong> Commands @arch to compress the session memory, write a handover note, and commands @ops to commit and push the repo safely.</li>
+                <li><strong>session-restart-atomic-git.md:</strong> Commands @ops to pull the repo, and @arch to ingest the handover note and re-orient the team.</li>
+                <li><strong>atomic-commit-push.md:</strong> A rapid save-state triggered autonomously or manually during deep coding sessions.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">🧠</span> 6. The Engine Strategy (Fast vs. Thinking)</h2>
+            <p>Do not leave your AI stuck in one mode. You act as the manual transmission, shifting gears based on the phase of your Agile sprint.</p>
+            <ul>
+                <li><strong>Sprint Planning = Thinking Mode:</strong> When generating the Epic, writing the .plan, or verifying heavy physics with @sme, use a reasoning model. The AI will think deeply before typing.</li>
+                <li><strong>Sprint Execution = Fast Mode:</strong> Once the .plan is saved, toggle your IDE to a standard/fast model. Tell @dev to execute the plan. It will blitz through code generation at lightning speed.</li>
+                <li><strong>Deadlock Resolution = Thinking Mode:</strong> If @rte pauses the train due to a bug, switch back to Thinking Mode to analyze the SCoT log and break the tie.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">💼</span> 7. The Business & Model Selection Strategy</h2>
+            <p>You pay for Google Workspace and have access to the Gemini Ultra/Pro API. You do not need to pay for monthly subscriptions to run this factory.</p>
+            
+            <h3>Primary Engine: Gemini (1.5 Pro / 2.0 Pro)</h3>
+            <p>Run 95% of your factory on Gemini.</p>
+            <ul>
+                <li><strong>Why:</strong> Gemini has a massive 2-million token context window. In scientific coding, you can load dozens of academic PDFs, textbooks, and your entire codebase into the memory, and Gemini will synthesize it flawlessly.</li>
+                <li><strong>Cost:</strong> Highly cost-effective since it aligns with your existing Google ecosystem.</li>
+            </ul>
+
+            <h3>The "Sniper" Insurance: Claude / OpenAI (Pay-as-you-go API)</h3>
+            <p>Do not buy a second subscription. Instead, create a free API account with Anthropic (Claude) or OpenAI and load exactly $10 in API credits.</p>
+            <ul>
+                <li><strong>Why:</strong> AI models have specific specialties. Claude 3.5 Sonnet is the undisputed king of React/UI coding. OpenAI o1/o3-mini is incredible at mathematical deadlocks.</li>
+                <li><strong>How to use:</strong> If Gemini's @dev gets stuck on a stubborn frontend bug and hits the Two-Strike rule, simply toggle your IDE's API dropdown to Claude, say "@dev, fix this UI bug," and let Claude write the code. Once fixed, toggle back to Gemini. This costs fractions of a cent per use and prevents you from ever getting permanently stuck.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><span class="icon">🎯</span> 8. Project Charter & Styling Initialization</h2>
+            <p>As the <span class="agent-link">@bo</span> of a new project spawned from this template, your immediate responsibility is to establish the <strong>Project Charter</strong>.</p>
+            <ul>
+                <li><strong>The Charter Alignment:</strong> Create or update the core Project Charter document at the root of your new environment. This document is the single source of truth for the project's vision, objectives, and constraints.</li>
+                <li><strong>Setup & Execution:</strong> Define your core epics, business logic, and KPIs in the Charter. You must ensure this base context is established before requesting your AI executives (like <span class="agent-link">@arch</span> and <span class="agent-link">@prod</span>) to begin blueprinting.</li>
+                <li><strong>Styling & Design System:</strong> Explicitly state the UI framework, CSS strategy, and branding guidelines within the Charter. Instruct <span class="agent-link">@brand</span> and <span class="agent-link">@dev</span> to strictly adhere to the styling constraints defined in your Charter.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            End of Manual. Factory online. Welcome to the future of development, @bo.
+        </div>
+    </div>
+</body>
+</html>
