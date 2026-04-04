@@ -54,7 +54,12 @@ export default function Navigation() {
                     </Link>
 
                     <div className="border-t border-slate-800 my-1"></div>
-                    <Link href="/dissolved-gas-calculators" className="px-4 py-2 text-amber-100 hover:bg-slate-800 hover:text-amber-400 transition-colors">
+                    <Link href="/interactive-tools/oil-spill-simulator" className="px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-cyan transition-colors">
+                      Oil Spill Simulator
+                    </Link>
+
+                    <div className="border-t border-slate-800 my-1"></div>
+                    <Link href="/dissolved-gas-calculators" className="px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-cyan transition-colors">
                       Gas Calculators Suite
                     </Link>
                   </div>
