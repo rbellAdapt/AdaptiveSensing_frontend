@@ -28,3 +28,9 @@ body {
     --foreground: #ededed;
   }
 }
+
+/* Dissolved Gas UI Overrides */
+select option {
+  background-color: #0C1B33 !important; 
+  color: white !important; 
+}

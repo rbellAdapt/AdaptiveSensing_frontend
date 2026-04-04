@@ -19,8 +19,10 @@ const ratelimit = redis ? new Ratelimit({
 }) : null;
 
 export default async function proxy(request: NextRequest) {
-  // Only intercept requests heading to the remote Python Simulator
-  if (request.nextUrl.pathname.startsWith('/api/simulate/')) {
+  const isUAS = request.nextUrl.pathname.startsWith('/api/simulate/');
+  const isGas = request.nextUrl.pathname.startsWith('/api/bca-');
+
+  if (isUAS || isGas) {
     
     // --- IP RATE LIMITING (Option 1) ---
     if (ratelimit) {
@@ -45,7 +47,8 @@ export default async function proxy(request: NextRequest) {
     // --- AUTHENTICATION PROXY ---
     const requestHeaders = new Headers(request.headers)
     // Securely embed the API key from your Vercel/Node environment
-    requestHeaders.set('X-API-Key', process.env.UAS_API_KEY || '')
+    const apiKey = isUAS ? process.env.UAS_API_KEY : process.env.DG_API_KEY;
+    requestHeaders.set('X-API-Key', apiKey || '')
     
     // Return Next response allowing the proxy rewrite to continue with injected secrets
     return NextResponse.next({
