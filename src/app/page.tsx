@@ -47,7 +47,7 @@ export default function Home() {
       </section>
 
       {/* Services Snapshot */}
-      <section className="py-12 bg-[#0c0c0c] border-b border-slate-900">
+      <section className="py-12 bg-slate-950 border-b border-slate-900">
          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-12">
                <h2 className="text-3xl font-bold text-slate-200 font-sans tracking-tight mb-4">Core Consulting Capabilities</h2>

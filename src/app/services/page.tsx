@@ -10,7 +10,7 @@ export default function ServicesPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background pb-20">
       {/* Header */}
-      <div className="relative border-b border-slate-800 bg-[#0c0c0c] py-20 overflow-hidden">
+      <div className="relative border-b border-slate-800 bg-slate-950 py-20 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-3xl">

@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-numpy
-scipy
-pydantic
-gsw
-PyCO2SYS

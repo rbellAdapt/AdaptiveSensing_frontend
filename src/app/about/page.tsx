@@ -9,7 +9,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background pb-20">
       {/* Header */}
-      <div className="relative border-b border-slate-800 bg-[#0c0c0c] py-20 overflow-hidden">
+      <div className="relative border-b border-slate-800 bg-slate-950 py-20 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-4xl">
@@ -76,17 +76,17 @@ export default function AboutPage() {
         <section className="border-t border-slate-800 pt-16">
             <h3 className="text-2xl font-bold text-slate-200 mb-8 font-sans">Cross-Disciplinary Expertise</h3>
             <div className="grid md:grid-cols-3 gap-8">
-                <div className="p-6 border border-slate-800 rounded-xl bg-[#0c0c0c] hover:border-cyan/50 transition-colors">
+                <div className="p-6 border border-slate-800 rounded-xl bg-slate-950 hover:border-cyan/50 transition-colors">
                     <Droplets className="h-8 w-8 text-cyan mb-4" />
                     <h4 className="font-semibold text-lg text-slate-200 mb-2 font-sans">Chemical Oceanography</h4>
                     <p className="text-slate-400 text-sm font-sans leading-relaxed">Deep understanding of physical phenomenology, thermodynamics, and high-pressure fluid dynamics requisite for deep-sea sensor deployment.</p>
                 </div>
-                <div className="p-6 border border-slate-800 rounded-xl bg-[#0c0c0c] hover:border-amber/50 transition-colors">
+                <div className="p-6 border border-slate-800 rounded-xl bg-slate-950 hover:border-amber/50 transition-colors">
                     <BrainCircuit className="h-8 w-8 text-amber mb-4" />
                     <h4 className="font-semibold text-lg text-slate-200 mb-2 font-sans">Data Science & Algorithms</h4>
                     <p className="text-slate-400 text-sm font-sans leading-relaxed">Developing proprietary Fickian models, UAS Plume Simulations, and real-time spectral deconvolution isolated on secure server environments.</p>
                 </div>
-                <div className="p-6 border border-slate-800 rounded-xl bg-[#0c0c0c] hover:border-cyan/50 transition-colors">
+                <div className="p-6 border border-slate-800 rounded-xl bg-slate-950 hover:border-cyan/50 transition-colors">
                     <Shield className="h-8 w-8 text-cyan mb-4" />
                     <h4 className="font-semibold text-lg text-slate-200 mb-2 font-sans">Hardware Engineering</h4>
                     <p className="text-slate-400 text-sm font-sans leading-relaxed">Building the physical bridges—high-pressure vessels, bespoke ROV payload integrations, and the low-level firmware required to run them autonomously.</p>

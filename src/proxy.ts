@@ -11,10 +11,10 @@ const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_RE
     }) 
   : null;
 
-// Allow a maximum of 5 heavy physics simulations per minute per IP Address
+// Allow a maximum of 20 heavy physics simulations per minute per IP Address (Accommodate shared public IPs)
 const ratelimit = redis ? new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.slidingWindow(5, "1 m"),
+  limiter: Ratelimit.slidingWindow(20, "1 m"),
   analytics: true,
 }) : null;
 
