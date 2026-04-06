@@ -7,6 +7,7 @@
 
 ## 🚀 Hosting & Deployment: Vercel
 - **Account:** `adaptive-sensing`
+- **Project ID:** 'prj_pIinvpHG80dnSlKBEvnmnkWzJKuy'
 
 
 ## Interactive Tools Backend

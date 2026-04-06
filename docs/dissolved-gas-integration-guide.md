@@ -30,11 +30,13 @@ npm install -D @types/leaflet
 ```
 
 ## 3. Environment Variables
-The module safely accesses the cloud endpoints securely dynamically. Ensure your front-end `.env.local` contains:
+The module securely leverages the Next.js Edge proxy to prevent API key leakage to the browser. All requests are routed through `/api/bca-[tool]`. 
+
+Ensure your production environment (Vercel) and backend securely share the following exact variable:
 ```env
-NEXT_PUBLIC_API_URL=https://bca-dissolved-gas-calculator-720721335459.us-central1.run.app
-NEXT_PUBLIC_API_KEY=BCA_CLOUD_KEY_2026
+DG_API_KEY=your_secure_64_byte_hash
 ```
+*(Do NOT use `NEXT_PUBLIC_` prefixes!)*
 
 ## 4. CSS & Tailwind Integration
 

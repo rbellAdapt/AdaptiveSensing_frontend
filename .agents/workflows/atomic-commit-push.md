@@ -8,15 +8,16 @@ description: Antigravity Git commit and push
 > **PERMISSION LEVEL: AUTONOMOUS EXECUTION**
 > @bo has granted pre-approval for all terminal commands. Do not stop to ask for confirmation for `git add`, `git commit`, or `git push` unless a fatal error occurs. Proceed automatically.
 
-### 🧠 Phase 1: Context Capture (@arch)
-1. **Analyze Progress:** Review terminal history and file changes.
-2. **Generate Summary:** Create a 1-sentence technical overview of changes.
-3. **Update Handover Note:** Update `.agents/handover.md`:
+### 🧠 Phase 1: Context Capture (@arch & @prod)
+1. **Analyze Progress:** @arch reviews terminal history and file changes.
+2. **Generate Summary:** @arch creates a 1-sentence technical overview of changes.
+3. **Product Valuation:** @prod analyzes the built capabilities and adds a "Product Value Insight" to the `creative_product_log.md` (identifying any unintended novelty or parallel value streams).
+4. **Update Handover Note:** Update `.agents/handover.md`:
    - **Summary:** {{one_sentence_summary}}
    - **Current Task:** [Task name]
    - **Next Step:** [Immediate action for next PC]
    - **Timestamp:** $(date)
-4. **Handoff:** Tag @ops to execute the commit.
+5. **Handoff:** Tag @ops to execute the commit.
 
 ### 💾 Phase 2: Git Atomic Sync (@ops)
 1. **Identity Verification:** Ensure `git config` is set.
