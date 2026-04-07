@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { ResultsTable } from '../ResultsTable';
-import { defaultSeawaterOnlyResults } from '../ResultsDefaults';
+import { defaultSWResults } from '../ResultsDefaults';
 import dynamic from 'next/dynamic';
 
 const LocationMap = dynamic(() => import('../LocationMap'), { ssr: false });
@@ -21,7 +21,7 @@ export default function SeawaterProperties() {
     press: 0
   });
 
-  const [results, setResults] = useState<any>(defaultSeawaterOnlyResults);
+  const [results, setResults] = useState<any>(defaultSWResults);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const wokeBackend = useRef(false);
