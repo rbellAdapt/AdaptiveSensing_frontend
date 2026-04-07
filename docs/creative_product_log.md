@@ -8,3 +8,7 @@
 ---
 **Timestamp:** 2026-04-06 22:33 UTC
 **Insight:** By successfully defending the Edge proxy architecture against external pressure to revert to `NEXT_PUBLIC_` bundle parameters, AdaptiveSensing has established a demonstrable "Zero-Trust" posture for its frontend integrations. This is a massive selling point when licensing these calculators to B2B or government partners, as you can mathematically prove the web infrastructure physically cannot leak integration credentials, thereby radically lowering the buyer's perceived security liability.
+
+---
+**Timestamp:** 2026-04-07 09:51 UTC
+**Insight:** Adapting infrastructure immediately to Vercel's semantic `proxy.ts` convention not only stabilizes the Next.js CI/CD pipeline but reinforces AdaptiveSensing's edge-compute readiness, reducing platform deployment friction for enterprise rollout.

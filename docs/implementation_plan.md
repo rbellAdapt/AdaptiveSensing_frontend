@@ -13,6 +13,7 @@ The primary objective is to develop a lead-generating, highly technical consulti
 
 ### Frontend UI & Client Logic
 Handles UI components, state, data visualization, and client-side logic. The frontend must NEVER contain proprietary algorithms.
+*Convention Note:* Strictly use the `proxy.ts` naming convention over `middleware.ts` for Edge interception to avoid Vercel build complaints.
 
 #### [NEW] `src/frontend/package.json`
 Dependencies for the application, including React, Next.js, and Plotly.js/D3.js for data visualization.
