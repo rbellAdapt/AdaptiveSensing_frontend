@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       status: 'success',
       engine_routed: engine || 'default_physics_model',
-      usage_count: ipTracker[ip],
+      usage_count: isAuthenticated ? 'Unlimited' : (currentUsage + 1),
       message: 'Proxy success.',
     });
 
