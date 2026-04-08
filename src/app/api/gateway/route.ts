@@ -1,28 +1,53 @@
 import { NextResponse } from 'next/server';
+import { getServerSession } from "next-auth/next";
+import { Redis } from '@upstash/redis';
 
-// Temporary In-Memory Store for Dev Rate Limiting (Phase 1 Stub)
-// In Phase 2, this will be migrated to Vercel Postgres or Supabase.
-const ipTracker: Record<string, number> = {};
+// Initialize upstream persistence. If env lacks keys, it will gracefully fallback to anonymous memory.
+const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    })
+  : null;
+
+// Temporary In-Memory fallback
+const fallbackIpTracker: Record<string, number> = {};
 
 export async function POST(request: Request) {
   try {
+    // 0. Verify NextAuth Session
+    const session = await getServerSession();
+    const isAuthenticated = !!session?.user;
+
     // 1. Enforce Traffic Control (Anonymous IP vs Authenticated Token)
-    // NextAuth integration goes here in the future
     const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
     
     // Check usage
-    const currentUsage = ipTracker[ip] || 0;
+    let currentUsage = 0;
+    const redisKey = `gateway_limits:${ip}`;
     
-    // Artificial 3-Simulation Limit for Unauthenticated Users
-    if (currentUsage >= 3) {
+    if (redis) {
+      currentUsage = (await redis.get<number>(redisKey)) || 0;
+    } else {
+      currentUsage = fallbackIpTracker[ip] || 0;
+    }
+    
+    // Artificial 5-Simulation Limit for Unauthenticated Users
+    if (!isAuthenticated && currentUsage >= 5) {
       return NextResponse.json(
         { error: 'Enterprise Batch Limit Reached', code: 'RATE_LIMIT_EXCEEDED' },
         { status: 429 } // HTTP 429 Too Many Requests
       );
     }
     
-    // Increment the simulation tracker
-    ipTracker[ip] = currentUsage + 1;
+    // Increment the simulation tracker for anonymous viewers
+    if (!isAuthenticated) {
+      if (redis) {
+        await redis.incr(redisKey);
+      } else {
+        fallbackIpTracker[ip] = currentUsage + 1;
+      }
+    }
 
     // 2. Extract Payload
     const body = await request.json();

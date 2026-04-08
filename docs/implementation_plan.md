@@ -10,7 +10,7 @@ The primary objective is to develop a lead-generating, highly technical consulti
 ## Architectural Design: The Decoupled API Funnel
 The architecture now pivots to support the "Holy Grail SaaS Funnel." 
 - **The Wrapper Pattern:** Next.js API routes (`/api/[engine]`) will act as a decoupled API Gateway.
-- **Auth & Rate Limiting:** NextAuth (Google SSO) will be integrated at the gateway. Anonymous users receive 3 free requests tracked via IP/Cookie. Power users are forced to authenticate.
+- **Auth & Rate Limiting:** NextAuth (Google SSO) will be integrated at the gateway. Anonymous users receive 5 free requests tracked via IP/Cookie. Power users are forced to authenticate.
 - **Backend Continuity:** The gateway forwards payload packets to the isolated Python containers. The front-end React components remain completely "dumb" and unaware of Auth/Payment logic.
 
 ## Proposed Changes

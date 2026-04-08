@@ -5,10 +5,12 @@ import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { ResultsTable } from '../ResultsTable';
 import { defaultSWResults } from '../ResultsDefaults';
 import dynamic from 'next/dynamic';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 
 const LocationMap = dynamic(() => import('../LocationMap'), { ssr: false });
 
 export default function SeawaterProperties() {
+  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -39,6 +41,18 @@ export default function SeawaterProperties() {
     setError('');
     wokeBackend.current = true;
     try {
+      // 1. Gateway Traffic Cop Ping (Rate Limit check)
+      const gatewayRes = await fetch('/api/gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engine: 'seawater_properties', parameters: {} })
+      });
+      if (gatewayRes.status === 429) {
+        setLoading(false);
+        triggerPaywall();
+        return;
+      }
+
       const payload = { ...seaState };
 
       const baseUrl = '/api';

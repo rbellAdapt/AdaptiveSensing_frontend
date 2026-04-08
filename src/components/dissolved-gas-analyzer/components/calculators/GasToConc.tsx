@@ -5,8 +5,10 @@ import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow, GAS_OPTIONS } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
 import { defaultGasToConcResults } from '../ResultsDefaults';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 
 export default function GasToConc() {
+  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -44,6 +46,18 @@ export default function GasToConc() {
     setError('');
     wokeBackend.current = true;
     try {
+      // 1. Gateway Traffic Cop Ping (Rate Limit check)
+      const gatewayRes = await fetch('/api/gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engine: 'gas_to_conc', parameters: {} })
+      });
+      if (gatewayRes.status === 429) {
+        setLoading(false);
+        triggerPaywall();
+        return;
+      }
+
       const allNames = gasRows.map(r => r.name);
       if (new Set(allNames).size !== allNames.length) {
          throw new Error("Duplicate gases found in the table. Please combine or rename them.");

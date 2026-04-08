@@ -1,6 +1,6 @@
 # Session Handover
 
-**Summary:** Deployed the Next.js API Gateway and AuthWrapper to orchestrate a "Freemium Teaser" SaaS funnel, completely decoupled the remaining Homepage payload into the `content` directory, and ran successful `/qa-deploy` cold starts.
-**Current Task:** SaaS Lead/Monetization Integration (Phase 1 Proxy Setup Complete)
-**Next Step:** Implement `next-auth` to wire up the actual Google SSO credentialing inside `<AuthWrapper>`, allowing captured leads to hit the backend DB.
-**Timestamp:** 2026-04-08 10:25:00-06:00
+**Summary:** Architected full NextAuth Google SSO funnel with Upstash Redis rate-limit persistence and Resend data delivery pipeline.
+**Current Task:** Vercel Hardening & Funnel Integration (Phase 2 proxy complete)
+**Next Step:** Provision Upstash/Resend keys within Vercel UI, deploy branch to `adaptivesensing.io`, and prepare for transition to comprehensive Stripe API billing hooks (Phase 3).
+**Timestamp:** 2026-04-08 13:25:00-06:00

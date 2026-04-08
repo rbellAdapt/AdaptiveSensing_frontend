@@ -5,8 +5,10 @@ import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
 import { defaultConcToGasResults } from '../ResultsDefaults';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 
 export default function ConcToGas() {
+  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -44,6 +46,18 @@ export default function ConcToGas() {
     setError('');
     wokeBackend.current = true; // no need to wake if calculating
     try {
+      // 1. Gateway Traffic Cop Ping (Rate Limit check)
+      const gatewayRes = await fetch('/api/gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engine: 'conc_to_gas', parameters: {} })
+      });
+      if (gatewayRes.status === 429) {
+        setLoading(false);
+        triggerPaywall();
+        return;
+      }
+
       const payload = {
         ...seaState,
         reportingUnits,
