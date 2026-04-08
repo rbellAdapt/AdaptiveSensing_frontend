@@ -68,7 +68,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 Request Commercial Access
               </a>
               
-              <button onClick={() => setShowPaywall(false)} className="mt-6 text-slate-600 text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors">
+              <button onClick={() => setLocalShowPaywall(false)} className="mt-6 text-slate-600 text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors">
                  [ Close Modal ]
               </button>
             </div>
