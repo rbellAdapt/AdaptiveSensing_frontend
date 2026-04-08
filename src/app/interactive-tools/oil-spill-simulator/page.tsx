@@ -1,10 +1,15 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, HardHat } from 'lucide-react';
+import { ArrowLeft, HardHat, Download } from 'lucide-react';
+import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
 
-export default function OilSpillSimulatorPage() {
+function SimulatorContent() {
+  const { triggerPaywall } = useAuthFunnel();
+
   return (
-    <div className="bg-slate-950 min-h-screen text-slate-200 py-8">
+    <div className="bg-slate-950 min-h-screen text-slate-200 py-8 relative pb-20">
        <div className="container mx-auto px-4">
          <Link
            href="/"
@@ -25,7 +30,7 @@ export default function OilSpillSimulatorPage() {
               This interactive tool is actively under development. The backend container mapping algorithms and the dynamic UI wrapper are currently a <span className="text-amber-400">work in progress</span>.
             </p>
             
-            <div className="mt-4 border border-slate-700/80 rounded-xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
+            <div className="mt-4 border border-slate-700/80 rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] max-w-4xl mx-auto">
               <Image 
                 src="/images/Oil-spill-sim-tamoc-core.png" 
                 alt="Oil Spill Simulator TAMOC Core Concept" 
@@ -36,6 +41,25 @@ export default function OilSpillSimulatorPage() {
             </div>
          </div>
        </div>
+
+      {/* Batch Processing CTA */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <button 
+          onClick={triggerPaywall}
+          className="group flex items-center gap-3 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-3 rounded-full font-mono text-sm shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 active:scale-95"
+        >
+          <Download className="h-4 w-4" />
+          <span>Export Batch Payload</span>
+        </button>
+      </div>
     </div>
   )
+}
+
+export default function OilSpillSimulatorPage() {
+  return (
+    <AuthWrapper>
+      <SimulatorContent />
+    </AuthWrapper>
+  );
 }

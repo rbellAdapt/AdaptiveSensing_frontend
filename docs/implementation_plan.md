@@ -4,8 +4,14 @@ The primary objective is to develop a lead-generating, highly technical consulti
 
 ## User Review Required
 
-- Confirm if Next.js vs. Vue is strictly decided, or if the development team (@dev) has discretion.
-- Confirm any specific authentication strategies for "Lead Capture" to integrate into the backend infrastructure.
+- Confirm deployment timeline for Stage 2 (Dockerized GCP Backend) vs. Stage 1 (API Proxy & JS approximations).
+- Confirm PostgreSQL vs. Supabase for rate limit data persistence.
+
+## Architectural Design: The Decoupled API Funnel
+The architecture now pivots to support the "Holy Grail SaaS Funnel." 
+- **The Wrapper Pattern:** Next.js API routes (`/api/[engine]`) will act as a decoupled API Gateway.
+- **Auth & Rate Limiting:** NextAuth (Google SSO) will be integrated at the gateway. Anonymous users receive 3 free requests tracked via IP/Cookie. Power users are forced to authenticate.
+- **Backend Continuity:** The gateway forwards payload packets to the isolated Python containers. The front-end React components remain completely "dumb" and unaware of Auth/Payment logic.
 
 ## Proposed Changes
 
@@ -16,7 +22,11 @@ Handles UI components, state, data visualization, and client-side logic. The fro
 *Convention Note:* Strictly use the `proxy.ts` naming convention over `middleware.ts` for Edge interception to avoid Vercel build complaints.
 
 #### [NEW] `src/frontend/package.json`
-Dependencies for the application, including React, Next.js, and Plotly.js/D3.js for data visualization.
+Dependencies for the application, including React, Next.js, Plotly.js/D3.js for data visualization, and NextAuth (`next-auth`) for Google SSO integration.
+#### [NEW] `src/frontend/api/gateway/[engine].ts`
+The universal Next.js API interceptor. Tracks IP/User-ID requests against a database limit, issues `429 Too Many Requests` to trigger paywalls, and otherwise proxies JSON to the Dockerized Python engines.
+#### [NEW] `src/frontend/components/AuthWrapper.tsx`
+Higher Order Component (HOC) that intercepts 429 gateway errors and dynamically mounts the "Login with Google" or "Contact Sales for Batch Processing" modals without breaking the underlying physics UI.
 #### [NEW] `src/frontend/pages/index.tsx`
 Homepage and routing definitions featuring the "Engineering-First" dark mode aesthetic, typography (Monospace/Sans-serif), and cross-link banners.
 #### [NEW] `src/frontend/components/PlumeVisualizer.tsx`

@@ -18,7 +18,7 @@ export default function ServicesPage() {
               Specialized Engineering Services
             </h1>
             <p className="text-xl text-slate-400 font-sans">
-              Deployable chemical and physical analysis solutions for mission-critical, high-stakes environments.
+              Deployable chemical and physical analysis solutions for analytical, high-stakes, and commercial applications.
             </p>
           </div>
         </div>
@@ -35,7 +35,8 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 gap-12">
             <div>
               <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Precision mapping of complex atmospheric plumes and fugitive emissions in realtime. Utilizing UAV integration for scalable data collection and high-resolution mass spectrometry.
+                Precision mapping of complex atmospheric plumes and fugitive emissions in realtime. Utilizing UAV integration for scalable data collection and high-resolution mass spectrometry.<br/><br/>
+                By correlating meteorological wind data traversing complex topographies with molecular concentrations, I build rigorously validated dispersion models to precisely identify dynamic upstream emission sources.
               </p>
               <ul className="space-y-4 font-sans text-slate-300">
                 <li className="flex items-start">
@@ -67,18 +68,15 @@ export default function ServicesPage() {
             <h2 className="text-3xl font-bold text-slate-200 font-sans">Seep Hunting & Reservoir Derisking</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="order-2 md:order-1 border border-slate-800 rounded-xl bg-slate-900/50 p-6 flex flex-col justify-center">
-              <div className="w-full aspect-video bg-[#050505] rounded-lg border border-slate-800 flex items-center justify-center relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582994464161-12c823fecd24?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-30 mix-blend-luminosity group-hover:opacity-40 transition-opacity"></div>
-                  <div className="relative z-10 text-center space-y-2">
-                       <p className="font-mono text-indigo-400 text-sm tracking-widest">[ CHEMICAL_GROUNDTRUTH ]</p>
-                      <p className="text-slate-500 text-xs">Phase-protected aromatics detected...</p>
-                  </div>
+            <div className="order-2 md:order-1 border border-slate-800 rounded-xl bg-slate-900/50 p-2 flex flex-col justify-center">
+              <div className="w-full relative rounded-lg border border-slate-800 overflow-hidden group">
+                  <img src="/images/Collage_of_seep.jpeg" alt="Deep-water Seep Visualization" className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
               </div>
             </div>
             <div className="order-1 md:order-2">
               <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Leveraging in-situ Subsea Mass Spectrometry (UMS) to detect rapid advection pathways and phase-protected aromatics directly at the seafloor. Differentiating true reservoir &quot;Live Oil&quot; from aged sediment overprints in real-time.
+                Having led chemical sensing teams on ROV-based survey missions across dozens of active seep sites globally, I bring firsthand operational expertise to deep-water reservoir derisking. Leveraging in-situ Underwater Mass Spectrometry (UMS) alongside other remote sensors and predictive plume modeling, I pinpoint rapid advection pathways and phase-protected aromatics directly at the seafloor.<br/><br/>
+                This direct, on-the-bottom experience ensures definitive differentiation between true reservoir &quot;Live Oil&quot;, biogenic seeps, refined products, and localized aged sediment overprints in real-time.
               </p>
               <ul className="space-y-4 font-sans text-slate-300">
                 <li className="flex items-start">
@@ -87,7 +85,7 @@ export default function ServicesPage() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-indigo-400 mr-2 font-mono">{">"}</span>
-                  Pre-drill Gas-Oil Ratio (GOR) Forecasting
+                  Subsea Plume Modeling & Chemical Transport Tracking
                 </li>
                 <li className="flex items-start">
                   <span className="text-indigo-400 mr-2 font-mono">{">"}</span>
@@ -100,40 +98,6 @@ export default function ServicesPage() {
                    <ShieldCheck className="h-5 w-5 mr-3 text-indigo-400" />
                    Need mission-ready seep hunting instrumentation? Visit www.bcanalytical.com
                  </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Carbon Capture & CCUS */}
-        <section id="carbon-capture">
-          <div className="flex items-center space-x-3 mb-8">
-            <Leaf className="h-8 w-8 text-green-500" />
-            <h2 className="text-3xl font-bold text-slate-200 font-sans">Carbon Capture Industry Support</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Specializing in robust Measurement, Reporting, and Verification (MRV) protocols. Delivering analytical certainty for Carbon Capture, Utilization, and Storage (CCUS) projects operating in environmentally sensitive or deep-sea domains.
-              </p>
-              <ul className="space-y-4 font-sans text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2 font-mono">{">"}</span>
-                  Inorganic Carbon (DIC) Baseline Profiling
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2 font-mono">{">"}</span>
-                  Subsea Leak Detection & Benthic Flux Modeling
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2 font-mono">{">"}</span>
-                  Rigorous GHG Compliance & Validation Scrutiny
-                </li>
-              </ul>
-            </div>
-            <div className="border border-slate-800 rounded-xl bg-slate-900/50 p-2 flex flex-col justify-center">
-              <div className="w-full relative rounded-lg border border-slate-800 overflow-hidden">
-                  <img src="/images/CarbonMVP.jpeg" alt="Carbon Capture MRV Dashboard" className="w-full h-auto object-cover opacity-80 mix-blend-screen" />
               </div>
             </div>
           </div>
@@ -180,20 +144,21 @@ export default function ServicesPage() {
              </div>
              <div className="order-1 md:order-2">
               <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Bridging the gap between embedded hardware control and higher-level algorithmic processing. Developing secure, portable algorithms that protect proprietary IP.
+                Operating as a strategic engineering &quot;force-multiplier,&quot; I orchestrate autonomous multi-agent AI ecosystems to radically accelerate full-stack software development. By coupling strict version control (Git) with Dockerized CI/CD pipelines deployed across Vercel and Google Cloud (GCP), I rapidly prototype and deploy scalable web architectures and telemetry pipelines.<br/><br/>
+                This architectural velocity is uniquely grounded in over a decade of cross-functional programming experience (Python, LabVIEW, MATLAB) and physical hardware integration. I bridge the critical gap between raw embedded control and high-level predictive algorithms—translating complex physical phenomena and deterministic Digital Signal Processing (DSP) into secure, portable software that protects proprietary IP.
               </p>
               <ul className="space-y-4 font-sans text-slate-300">
                 <li className="flex items-start">
                   <span className="text-amber mr-2 font-mono">{">"}</span>
-                  Low-Level Hardware Communication Protocols
+                  Dockerized CI/CD Pipelines (Git, Vercel, GCP)
                 </li>
                 <li className="flex items-start">
                   <span className="text-amber mr-2 font-mono">{">"}</span>
-                  C++ / Python / MATLAB Spectral Deconvolution Arrays
+                  Autonomous Multi-Agent Workflow Orchestration
                 </li>
                 <li className="flex items-start">
                   <span className="text-amber mr-2 font-mono">{">"}</span>
-                  Customized Real-time Laboratory GUIs
+                  Full-Stack Hardware Integration
                 </li>
               </ul>
             </div>
@@ -209,7 +174,8 @@ export default function ServicesPage() {
           <div className="grid md:grid-cols-2 gap-12">
             <div>
               <p className="text-slate-400 text-lg mb-6 leading-relaxed">
-                Bringing laboratory-precision analytical sensing to the deepest, most extreme environments on the planet. Surviving high-pressure gradients with autonomous functionality.
+                Bringing laboratory-precision analytical sensing to the deepest, most extreme environments on the planet. Surviving high-pressure gradients with autonomous functionality.<br/><br/>
+                This requires meticulously engineering robust pressure housings, membrane interface electronics, and fail-safe power telemetry capable of enduring multi-month deployments at abyssal depths.
               </p>
               <ul className="space-y-4 font-sans text-slate-300">
                 <li className="flex items-start">
@@ -242,6 +208,8 @@ export default function ServicesPage() {
 
           </div>
         </section>
+
+
 
       </div>
     </div>

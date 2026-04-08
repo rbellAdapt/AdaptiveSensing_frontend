@@ -12,3 +12,7 @@
 ---
 **Timestamp:** 2026-04-07 09:51 UTC
 **Insight:** Adapting infrastructure immediately to Vercel's semantic `proxy.ts` convention not only stabilizes the Next.js CI/CD pipeline but reinforces AdaptiveSensing's edge-compute readiness, reducing platform deployment friction for enterprise rollout.
+
+---
+**Timestamp:** 2026-04-08 16:26 UTC
+**Insight:** By architecting the "Holy Grail API Funnel," the site transitions from a static consulting resume into a robust SaaS foundation. Using a decoupled API Gateway (`/api/gateway/route.ts`) mapped to a Higher-Order `<AuthWrapper>`, the interactive UI remains completely frictionless for lead generation while simultaneously walling off unauthorized, high-volume batch queries. This dual-track strategy explicitly markets commercial Docker deployments to enterprise "whales" without alienating casual viewers, cementing AdaptiveSensing as a highly sophisticated Engineering Force-Multiplier.

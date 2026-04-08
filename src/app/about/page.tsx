@@ -102,12 +102,12 @@ export default function AboutPage() {
                {
                  category: "Data Science & Software",
                  skills: [
-                   "Mass Spectrometry Deconvolution",
-                   "Real-Time Data Acq. (RT-DAS)",
-                   "Complex DSP & Signal Filtering",
+                   "Spectral Deconvolutions",
+                   "Real-Time Data Acquisition",
+                   "Multi-Agent AI Orchestration",
+                   "Idea to Git to CI/CD Production Pipelines",
                    "Geospatial Data Fusion & Mapping",
-                   "Scientific Software (Python, MATLAB)",
-                   "Chemometric Algorithm Design"
+                   "Scientific Software (Python, MATLAB)"
                  ]
                },
                {

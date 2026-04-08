@@ -6,8 +6,11 @@ import SensorConfigTab from '@/components/uas-simulator/SensorConfigTab';
 import FlightConfigTab from '@/components/uas-simulator/FlightConfigTab';
 import AdaptiveConfigTab from '@/components/uas-simulator/AdaptiveConfigTab';
 import SimulationViewport from '@/components/uas-simulator/SimulationViewport';
+import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
+import { Download } from 'lucide-react';
 
-export default function Home() {
+function SimulatorContent() {
+  const { triggerPaywall } = useAuthFunnel();
   const [gridData, setGridData] = useState<any>(null);
   const [gridConfig, setGridConfig] = useState<any>(null);
   const [liveAdaptiveConfig, setLiveAdaptiveConfig] = useState<any>(null);
@@ -147,6 +150,17 @@ export default function Home() {
     const ts = overrideTimeseries || (flightData ? flightData.timeseries : null);
     if (!ts || !gridConfig) return;
     try {
+      // 1. Gateway Traffic Cop Ping (Rate Limit check)
+      const gatewayRes = await fetch('/api/gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engine: 'uas_plume_analyze_hits', parameters: {} })
+      });
+      if (gatewayRes.status === 429) {
+        triggerPaywall();
+        return;
+      }
+
       const enhancedConfig = {
         ...config,
         wind_direction_deg: gridConfig.wind_direction_deg,
@@ -200,6 +214,18 @@ export default function Home() {
     };
     
     try {
+      // 1. Gateway Traffic Cop Ping (Rate Limit check)
+      const gatewayRes = await fetch('/api/gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ engine: 'uas_plume_master_mission', parameters: {} })
+      });
+      if (gatewayRes.status === 429) {
+        setIsSimulating(false);
+        triggerPaywall();
+        return;
+      }
+
       const res = await fetch('/api/simulate/mission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -318,6 +344,26 @@ export default function Home() {
           <SimulationViewport gridData={gridData} gridConfig={gridConfig} plumeData={plumeData} plumeConfig={plumeConfig} flightConfig={flightConfig} flightData={flightData} activeTab={activeTab} previewSensorConfig={liveSensorConfig} sensorConfig={sensorConfig} hitData={hitData} hitDetectionConfig={hitDetectionConfig} demoTimeseries={demoTimeseries} demoHitData={demoHitData} />
         </div>
       </main>
+
+      {/* Batch Processing CTA */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <button 
+          onClick={triggerPaywall}
+          className="group flex items-center gap-3 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-3 rounded-full font-mono text-sm shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1"
+        >
+          <Download className="h-4 w-4" />
+          <span>Export Batch Data</span>
+        </button>
+      </div>
+
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthWrapper>
+      <SimulatorContent />
+    </AuthWrapper>
   );
 }
