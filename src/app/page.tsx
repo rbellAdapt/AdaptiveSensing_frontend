@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Activity, Cpu, Anchor, FlaskConical, Cloud, Waves } from "lucide-react";
+import TerminalAuditHook from "@/components/ui/TerminalAuditHook";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -159,6 +160,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <TerminalAuditHook />
+      </div>
     </div>
   );
 }

@@ -3,15 +3,18 @@
 import React, { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { Lock, Mail, Server } from "lucide-react";
 import { signIn, useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 interface AuthContextType {
   triggerPaywall: () => void;
   triggerEnterpriseModal: () => void;
+  triggerGeneralModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   triggerPaywall: () => { },
   triggerEnterpriseModal: () => { },
+  triggerGeneralModal: () => { },
 });
 
 export const useAuthFunnel = () => useContext(AuthContext);
@@ -24,14 +27,18 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const { data: session, status } = useSession();
   const [localShowPaywall, setLocalShowPaywall] = useState(false);
   const [showEnterpriseModal, setShowEnterpriseModal] = useState(false);
+  const [showGeneralModal, setShowGeneralModal] = useState(false);
   const [showIntegrationBanner, setShowIntegrationBanner] = useState(false);
+  const pathname = usePathname();
+  const isInteractiveToolRoute = pathname?.includes('/interactive-tools') || pathname?.includes('/dissolved-gas-calculators');
 
   useEffect(() => {
+    if (!isInteractiveToolRoute) return;
     const timer = setTimeout(() => {
       setShowIntegrationBanner(true);
     }, 90000); // 90 seconds
     return () => clearTimeout(timer);
-  }, []);
+  }, [isInteractiveToolRoute]);
 
   const isAuthenticated = status === "authenticated";
   const showPaywall = localShowPaywall && !isAuthenticated;
@@ -44,56 +51,66 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     setShowEnterpriseModal(true);
   };
 
+  const triggerGeneralModal = () => {
+    setShowGeneralModal(true);
+  };
+
   return (
-    <AuthContext.Provider value={{ triggerPaywall, triggerEnterpriseModal }}>
+    <AuthContext.Provider value={{ triggerPaywall, triggerEnterpriseModal, triggerGeneralModal }}>
       <div className="relative w-full h-full min-h-screen">
 
         {/* Status Indicator (Optional but good UX) */}
-        <div className="absolute top-4 right-4 z-50 text-xs font-mono flex items-center border border-cyan/20 bg-slate-900/50 px-3 py-1 rounded-full backdrop-blur-md text-cyan/70">
-          {isAuthenticated ? (
-            <>
-              Logged in as {session?.user?.email}
-              <button onClick={() => signOut()} className="ml-3 text-slate-500 hover:text-red-400 focus:outline-none">Log Out</button>
-            </>
-          ) : (
-            <button onClick={() => signIn("google")} className="flex items-center hover:text-cyan transition-colors focus:outline-none">
-              <Mail className="h-3 w-3 mr-1.5" />
-              Sign In
-            </button>
-          )}
-        </div>
+        {isInteractiveToolRoute && (
+          <div className="absolute top-4 right-4 z-50 text-xs font-mono flex items-center border border-cyan/20 bg-slate-900/50 px-3 py-1 rounded-full backdrop-blur-md text-cyan/70">
+            {isAuthenticated ? (
+              <>
+                Logged in as {session?.user?.email}
+                <button onClick={() => signOut()} className="ml-3 text-slate-500 hover:text-red-400 focus:outline-none">Log Out</button>
+              </>
+            ) : (
+              <button onClick={() => signIn("google")} className="flex items-center hover:text-cyan transition-colors focus:outline-none">
+                <Mail className="h-3 w-3 mr-1.5" />
+                Sign In
+              </button>
+            )}
+          </div>
+        )}
 
         {/* The isolated Tool UI */}
-        <div className={(showPaywall || showEnterpriseModal) ? "pointer-events-none blur-md transition-all duration-500 select-none opacity-50" : "transition-all duration-500"}>
+        <div className={(showPaywall || showEnterpriseModal || showGeneralModal) ? "pointer-events-none blur-md transition-all duration-500 select-none opacity-50" : "transition-all duration-500"}>
           {children}
 
           {/* Strategy 5: Persistent Marketing Footer */}
-          <div className="w-full text-center pb-8 pt-10 px-4 text-slate-500 font-mono text-[10px] sm:text-xs uppercase tracking-widest border-t border-slate-800/50 mt-12 bg-slate-950">
-            Engineered by AdaptiveSensing.io<span className="hidden sm:inline"> | </span><br className="sm:hidden block h-1" /> 
-            <button onClick={triggerEnterpriseModal} className="text-[#00e5ff] hover:text-white transition-colors font-bold sm:ml-2 drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">
-              Deploy Custom Infrastructure
-            </button>
-          </div>
+          {isInteractiveToolRoute && (
+            <div className="w-full text-center pb-8 pt-10 px-4 text-slate-500 font-mono text-[10px] sm:text-xs uppercase tracking-widest border-t border-slate-800/50 mt-12 bg-slate-950">
+              Engineered by AdaptiveSensing.io<span className="hidden sm:inline"> | </span><br className="sm:hidden block h-1" />
+              <button onClick={triggerEnterpriseModal} className="text-[#00e5ff] hover:text-white transition-colors font-bold sm:ml-2 drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">
+                Deploy Custom Infrastructure
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Strategy 2: Contextual Slide-up Banner */}
-        <div className={`fixed bottom-0 left-0 right-0 sm:bottom-6 sm:left-6 sm:right-auto z-[90] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showIntegrationBanner && !showPaywall && !showEnterpriseModal ? 'translate-y-0 opacity-100' : 'translate-y-full sm:translate-y-24 opacity-0 pointer-events-none'}`}>
-          <div className="bg-[#0b0f14]/95 border-t border-x sm:border border-[#00e5ff]/40 sm:rounded-xl p-4 sm:p-5 max-w-sm shadow-[0_0_30px_rgba(0,229,255,0.15)] flex flex-col relative backdrop-blur-md">
-            <button onClick={() => setShowIntegrationBanner(false)} className="absolute top-3 right-3 text-slate-500 hover:text-white transition-colors">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-            <div className="flex items-start gap-3 mb-3">
-              <div className="mt-0.5 bg-[#00e5ff]/10 p-2 rounded-lg text-[#00e5ff]"><Server className="w-4 h-4" /></div>
-              <div>
-                <h4 className="text-sm font-bold text-slate-200 font-sans tracking-tight leading-tight">Processing extensive datasets?</h4>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">We deploy automated telemetry pipelines for extreme-environments.</p>
+        {isInteractiveToolRoute && (
+          <div className={`fixed bottom-0 left-0 right-0 sm:bottom-6 sm:left-6 sm:right-auto z-[90] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showIntegrationBanner && !showPaywall && !showEnterpriseModal && !showGeneralModal ? 'translate-y-0 opacity-100' : 'translate-y-full sm:translate-y-24 opacity-0 pointer-events-none'}`}>
+            <div className="bg-[#0b0f14]/95 border-t border-x sm:border border-[#00e5ff]/40 sm:rounded-xl p-4 sm:p-5 max-w-sm shadow-[0_0_30px_rgba(0,229,255,0.15)] flex flex-col relative backdrop-blur-md">
+              <button onClick={() => setShowIntegrationBanner(false)} className="absolute top-3 right-3 text-slate-500 hover:text-white transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+              <div className="flex items-start gap-3 mb-3">
+                <div className="mt-0.5 bg-[#00e5ff]/10 p-2 rounded-lg text-[#00e5ff]"><Server className="w-4 h-4" /></div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-200 font-sans tracking-tight leading-tight">Processing extensive datasets?</h4>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">We deploy automated telemetry pipelines for extreme-environments.</p>
+                </div>
               </div>
+              <button onClick={() => { setShowIntegrationBanner(false); triggerEnterpriseModal(); }} className="w-full mt-1 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 font-mono text-[11px] uppercase tracking-wider py-2 rounded transition-all active:scale-95">
+                Request Integration Audit
+              </button>
             </div>
-            <button onClick={() => { setShowIntegrationBanner(false); triggerEnterpriseModal(); }} className="w-full mt-1 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 font-mono text-[11px] uppercase tracking-wider py-2 rounded transition-all active:scale-95">
-              Request Integration Audit
-            </button>
           </div>
-        </div>
+        )}
 
         {/* The Gated Paywall / Google Auth Modal */}
         {showPaywall && (
@@ -162,10 +179,13 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Technical Architecture Audit</h4>
 
                 {!isAuthenticated ? (
-                  <div className="mb-2 p-2 bg-cyan/10 border border-cyan/20 rounded-lg flex items-center justify-between">
-                    <span className="text-[11px] text-cyan pr-2 md:pr-4">Log in with Google to make a request.</span>
-                    <button onClick={() => signIn("google")} className="bg-slate-100 text-slate-900 font-bold py-1 px-2 rounded text-[10px] md:text-xs flex items-center hover:bg-white transition-colors whitespace-nowrap">
-                      <Mail className="h-2.5 w-2.5 md:h-3 md:w-3 mr-1" />
+                  <div className="mb-2 p-3 bg-cyan/5 border border-cyan/20 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[11px] md:text-xs text-cyan font-semibold">Sign in with Google to submit an automated request.</span>
+                      <span className="text-[10px] md:text-[11px] text-slate-400">Or email securely: <a href="mailto:ryan.bell@adaptivesensing.io" className="text-cyan hover:underline">ryan.bell@adaptivesensing.io</a></span>
+                    </div>
+                    <button onClick={() => signIn("google")} className="w-full md:w-auto bg-slate-100 text-slate-900 font-bold py-1.5 px-3 rounded text-[10px] md:text-xs flex items-center justify-center hover:bg-white transition-colors whitespace-nowrap">
+                      <Mail className="h-3 w-3 mr-1.5" />
                       Sign In
                     </button>
                   </div>
@@ -214,6 +234,79 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
               </div>
 
               <button onClick={() => setShowEnterpriseModal(false)} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
+                [ Close Modal ]
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* The General Consulting Modal */}
+        {showGeneralModal && (
+          <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+            <div className="bg-slate-900 border border-slate-700 p-6 md:p-8 rounded-xl max-w-lg w-full max-h-[95vh] overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col relative text-center">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-1 md:mb-2 font-sans tracking-tight shrink-0">General Consulting Inquiry</h3>
+              <p className="text-slate-400 font-sans text-xs md:text-sm leading-relaxed mb-4 md:mb-6 shrink-0">
+                Discuss complex analytics, data pipeline optimizations, or subsea and atmospheric instrument integration.
+              </p>
+
+              <div className="bg-slate-800/80 p-3 md:p-4 rounded-lg border border-slate-700 w-full mb-1 md:mb-2 text-left mt-2">
+                <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Technical Consultation</h4>
+
+                {!isAuthenticated ? (
+                  <div className="mb-2 p-3 bg-cyan/5 border border-cyan/20 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[11px] md:text-xs text-cyan font-semibold">Sign in with Google to submit an automated request.</span>
+                      <span className="text-[10px] md:text-[11px] text-slate-400">Or email securely: <a href="mailto:ryan.bell@adaptivesensing.io" className="text-cyan hover:underline">ryan.bell@adaptivesensing.io</a></span>
+                    </div>
+                    <button onClick={() => signIn("google")} className="w-full md:w-auto bg-slate-100 text-slate-900 font-bold py-1.5 px-3 rounded text-[10px] md:text-xs flex items-center justify-center hover:bg-white transition-colors whitespace-nowrap">
+                      <Mail className="h-3 w-3 mr-1.5" />
+                      Sign In
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-[11px] md:text-xs text-slate-400 mb-2">Our automated Stripe checkout is under construction. Please describe your project requirements below.</p>
+                )}
+
+                <textarea
+                  id="generalNeedsInput"
+                  className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-slate-300 h-24 focus:outline-none focus:border-cyan mb-3 resize-none"
+                  placeholder="E.g., I'm looking for a custom UAS payload routing integration, or we need a data science review."
+                ></textarea>
+                <button
+                  disabled={!isAuthenticated}
+                  onClick={(e) => {
+                    const btn = e.currentTarget;
+                    const needs = (document.getElementById('generalNeedsInput') as HTMLTextAreaElement)?.value || 'No specific needs listed (General Request)';
+                    const userEmail = session?.user?.email || 'anonymous';
+                    const userName = session?.user?.name || 'Unknown';
+
+                    const scriptURL = process.env.NEXT_PUBLIC_ENTERPRISE_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbzPNZUWr46VSAxzei5TbS294-X_cdpABJVorlq2EPoxYdm-MekVFs7AcwSTR9y1Rv3l_g/exec';
+
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<span class="flex items-center"><div class="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mr-2"></div> Sending...</span>';
+                    btn.disabled = true;
+
+                    fetch(`${scriptURL}?type=consulting&email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}&needs=${encodeURIComponent(needs)}`, {
+                      method: 'GET',
+                      mode: 'no-cors'
+                    }).then(() => {
+                      btn.innerHTML = 'Transmission Complete ✓';
+                      setTimeout(() => setShowGeneralModal(false), 2000);
+                    }).catch(error => {
+                      console.error('Error recording to proxy sheet!', error.message);
+                      window.location.href = `mailto:ryan.bell@adaptivesensing.io?subject=General Consulting Request&body=${encodeURIComponent(needs)}`;
+                      btn.innerHTML = originalHtml;
+                      btn.disabled = false;
+                    });
+                  }}
+                  className="w-full bg-cyan text-slate-950 font-bold py-2 px-4 rounded flex items-center justify-center hover:bg-[#00cce6] transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  <span>Send Consulting Inquiry</span>
+                </button>
+              </div>
+
+              <button onClick={() => setShowGeneralModal(false)} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
                 [ Close Modal ]
               </button>
             </div>

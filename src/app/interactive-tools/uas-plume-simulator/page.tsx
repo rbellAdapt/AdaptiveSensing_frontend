@@ -6,7 +6,7 @@ import SensorConfigTab from '@/components/uas-simulator/SensorConfigTab';
 import FlightConfigTab from '@/components/uas-simulator/FlightConfigTab';
 import AdaptiveConfigTab from '@/components/uas-simulator/AdaptiveConfigTab';
 import SimulationViewport from '@/components/uas-simulator/SimulationViewport';
-import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 import { Server, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
@@ -375,9 +375,5 @@ function SimulatorContent() {
 }
 
 export default function Home() {
-  return (
-    <AuthWrapper>
-      <SimulatorContent />
-    </AuthWrapper>
-  );
+  return <SimulatorContent />;
 }

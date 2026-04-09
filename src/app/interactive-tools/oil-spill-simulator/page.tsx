@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, HardHat, Server } from 'lucide-react';
-import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 import { useSession } from "next-auth/react";
 
 function SimulatorContent() {
@@ -66,9 +66,5 @@ function SimulatorContent() {
 }
 
 export default function OilSpillSimulatorPage() {
-  return (
-    <AuthWrapper>
-      <SimulatorContent />
-    </AuthWrapper>
-  );
+  return <SimulatorContent />;
 }

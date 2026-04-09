@@ -44,6 +44,7 @@ import Navigation from "@/components/ui/Navigation";
 import CloudRunPinger from "@/components/ui/CloudRunPinger";
 import { Analytics } from "@vercel/analytics/next";
 import { NextAuthProvider } from '@/components/NextAuthProvider';
+import { AuthWrapper } from '@/components/AuthWrapper';
 
 export default function RootLayout({
   children,
@@ -56,11 +57,13 @@ export default function RootLayout({
         className={`${interSans.variable} ${firaCode.variable} antialiased min-h-screen bg-background text-foreground`}
       >
         <NextAuthProvider>
-          <Navigation />
-          <CloudRunPinger />
-          <main className="pt-16">
-            {children}
-          </main>
+          <AuthWrapper>
+            <Navigation />
+            <CloudRunPinger />
+            <main className="pt-16">
+              {children}
+            </main>
+          </AuthWrapper>
           <Analytics />
         </NextAuthProvider>
       </body>

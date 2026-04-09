@@ -3,7 +3,7 @@
 import DissolvedGasSuite from '../../components/dissolved-gas-analyzer/DissolvedGasSuite';
 import Link from "next/link";
 import { ArrowLeft, Server } from "lucide-react";
-import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
+import { useAuthFunnel } from '@/components/AuthWrapper';
 import { useSession } from "next-auth/react";
 
 function CalculatorContent() {
@@ -45,9 +45,5 @@ function CalculatorContent() {
 }
 
 export default function DissolvedGasCalculatorsPage() {
-  return (
-    <AuthWrapper>
-      <CalculatorContent />
-    </AuthWrapper>
-  );
+  return <CalculatorContent />;
 }

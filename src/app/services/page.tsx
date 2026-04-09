@@ -1,5 +1,6 @@
 import { ArrowRight, Activity, Cpu, Anchor, ShieldCheck, Leaf, Map } from "lucide-react";
 import Link from "next/link";
+import TerminalAuditHook from "@/components/ui/TerminalAuditHook";
 
 export const metadata = {
   title: "Services | AdaptiveSensing.io",
@@ -214,8 +215,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-
-
+        <TerminalAuditHook />
       </div>
     </div>
   );

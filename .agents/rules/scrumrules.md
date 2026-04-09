@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Workspace Rules: Agile Release Train (ART) Orchestration
 
 ## 1. Global Team Definition
@@ -43,6 +47,7 @@ Post a brief "Startup" in the chat: "Cold Start complete. Project Charter ingest
 2. **Type Safety**: Avoid `any`. Use interfaces for data structures and types for union/aliases.
 3. **Hooks**: Always extract complex logic into custom hooks located in `src/hooks/`.
 4. **Errors**: Always wrap async calls in try-catch blocks with meaningful error logging.
+5. **AI Word**: NEVER use any of the following words or phrases: DSP, telemetry, Delve, Leverage, Utilize, Underscore, Empower, Foster, Streamline, Elevate, Tapestry, Landscape, Realm, Testament, Synergy, Symphony, Pivotal, Crucial, Vital, Robust, Seamless, Cutting-edge, Innovative, Multifaceted, Comprehensive, Holistic, Moreover, Furthermore, Consequently, Subsequently, Notably, In today's fast-paced digital age, It is important to note that, At the end of the day, When it comes to, That being said.
 
 ## 6. The Chain of Command & Deployment Gates
 - **Documentation First:** No agent is permitted to deviate from the logic in `implementation_plan.md`. If a request from **@bo** contradicts the plan, **@arch** must intervene and update the docs first.
