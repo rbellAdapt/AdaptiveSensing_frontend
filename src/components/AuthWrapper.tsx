@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, createContext, useContext, ReactNode } from "react";
+import React, { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { Lock, Mail, Server } from "lucide-react";
 import { signIn, useSession, signOut } from "next-auth/react";
 
@@ -24,6 +24,14 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const { data: session, status } = useSession();
   const [localShowPaywall, setLocalShowPaywall] = useState(false);
   const [showEnterpriseModal, setShowEnterpriseModal] = useState(false);
+  const [showIntegrationBanner, setShowIntegrationBanner] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntegrationBanner(true);
+    }, 90000); // 90 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
   const isAuthenticated = status === "authenticated";
   const showPaywall = localShowPaywall && !isAuthenticated;
@@ -58,6 +66,33 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         {/* The isolated Tool UI */}
         <div className={(showPaywall || showEnterpriseModal) ? "pointer-events-none blur-md transition-all duration-500 select-none opacity-50" : "transition-all duration-500"}>
           {children}
+
+          {/* Strategy 5: Persistent Marketing Footer */}
+          <div className="w-full text-center pb-8 pt-10 px-4 text-slate-500 font-mono text-[10px] sm:text-xs uppercase tracking-widest border-t border-slate-800/50 mt-12 bg-slate-950">
+            Engineered by AdaptiveSensing.io<span className="hidden sm:inline"> | </span><br className="sm:hidden block h-1" /> 
+            <button onClick={triggerEnterpriseModal} className="text-[#00e5ff] hover:text-white transition-colors font-bold sm:ml-2 drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">
+              Deploy Custom Infrastructure
+            </button>
+          </div>
+        </div>
+
+        {/* Strategy 2: Contextual Slide-up Banner */}
+        <div className={`fixed bottom-0 left-0 right-0 sm:bottom-6 sm:left-6 sm:right-auto z-[90] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showIntegrationBanner && !showPaywall && !showEnterpriseModal ? 'translate-y-0 opacity-100' : 'translate-y-full sm:translate-y-24 opacity-0 pointer-events-none'}`}>
+          <div className="bg-[#0b0f14]/95 border-t border-x sm:border border-[#00e5ff]/40 sm:rounded-xl p-4 sm:p-5 max-w-sm shadow-[0_0_30px_rgba(0,229,255,0.15)] flex flex-col relative backdrop-blur-md">
+            <button onClick={() => setShowIntegrationBanner(false)} className="absolute top-3 right-3 text-slate-500 hover:text-white transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <div className="flex items-start gap-3 mb-3">
+              <div className="mt-0.5 bg-[#00e5ff]/10 p-2 rounded-lg text-[#00e5ff]"><Server className="w-4 h-4" /></div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-200 font-sans tracking-tight leading-tight">Processing extensive datasets?</h4>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">We deploy automated telemetry pipelines for extreme-environments.</p>
+              </div>
+            </div>
+            <button onClick={() => { setShowIntegrationBanner(false); triggerEnterpriseModal(); }} className="w-full mt-1 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 font-mono text-[11px] uppercase tracking-wider py-2 rounded transition-all active:scale-95">
+              Request Integration Audit
+            </button>
+          </div>
         </div>
 
         {/* The Gated Paywall / Google Auth Modal */}
@@ -88,9 +123,9 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         {showEnterpriseModal && (
           <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
             <div className="bg-slate-900 border border-slate-700 p-6 md:p-8 rounded-xl max-w-lg w-full max-h-[95vh] overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col relative text-center">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-1 md:mb-2 font-sans tracking-tight shrink-0">Enterprise Services</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-1 md:mb-2 font-sans tracking-tight shrink-0">Technical Architecture Audit</h3>
               <p className="text-slate-400 font-sans text-xs md:text-sm leading-relaxed mb-4 md:mb-6 shrink-0">
-                Take your simulations to the next level with our dedicated cloud infrastructure and expert team.
+                Discuss custom payload integration, dedicated GPU cloud allocation, or batch API integration.
               </p>
 
               <div className="space-y-2 md:space-y-3 text-left mb-4 md:mb-8 w-full shrink-0">
@@ -124,7 +159,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
               </div>
 
               <div className="bg-slate-800/80 p-3 md:p-4 rounded-lg border border-slate-700 w-full mb-1 md:mb-2 text-left">
-                <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Cloud Allocation</h4>
+                <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Technical Architecture Audit</h4>
 
                 {!isAuthenticated ? (
                   <div className="mb-2 p-2 bg-cyan/10 border border-cyan/20 rounded-lg flex items-center justify-between">
@@ -141,7 +176,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 <textarea
                   id="needsInput"
                   className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-slate-300 h-16 focus:outline-none focus:border-cyan mb-3 resize-none"
-                  placeholder="E.g., I need 20,000 REST API batch simulations per month... or    I'd like to do some basic batch processing for a research project."
+                  placeholder="E.g., I need 20,000 REST API batch simulations per month... or    I need a custom telemetry pipeline integrated into our SCADA stack."
                 ></textarea>
                 <button
                   disabled={!isAuthenticated}
@@ -174,7 +209,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                   className="w-full bg-cyan text-slate-950 font-bold py-2 px-4 rounded flex items-center justify-center hover:bg-[#00cce6] transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Mail className="h-4 w-4 mr-2" />
-                  <span>Submit Provisioning Request</span>
+                  <span>Schedule Architecture Audit</span>
                 </button>
               </div>
 

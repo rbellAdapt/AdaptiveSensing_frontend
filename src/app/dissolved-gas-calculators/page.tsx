@@ -37,7 +37,7 @@ function CalculatorContent() {
             <Server className="h-4 w-4" />
             <span>API & Batch Access</span>
           </div>
-          <span className="text-[10px] text-amber/60 tracking-widest uppercase">Enterprise & Consulting</span>
+          <span className="text-[10px] text-amber/60 tracking-widest uppercase">Architecture Audit</span>
         </button>
       </div>
     </div>

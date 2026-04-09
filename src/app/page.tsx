@@ -16,14 +16,13 @@ export default function Home() {
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-100 mb-6 font-sans">
-              Distilling <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-amber">High-Entropy Sensor Data</span> <br />
-              into Defensible Strategic Intelligence.
+              Deconvolving <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-amber">Complex Sensor Data</span> <br />
+              into Actionable Intelligence.
             </h1>
 
             <p className="max-w-4xl text-lg md:text-xl text-slate-400 mb-10 font-sans leading-relaxed">
-              The independent engineering and data science consulting practice of <strong className="text-slate-200 font-semibold">Dr. Ryan Bell</strong>.<br />
-              Specializing in bespoke analytical instrumentation, digital signal processing, and quantitative analytics for high-stakes Defense, Subsea, Industrial and Commercial applications.
+              AdaptiveSensing.io is the independent engineering and data science consulting practice of <strong className="text-slate-200 font-semibold">Dr. Ryan Bell</strong>. Bridging PhD-level environmental chemistry with field-deployable engineering to orchestrate end-to-end intelligence pipelines. I design, build, and deploy advanced analytical instrumentation and quantitative models for high-stakes operations in extreme environments.
             </p>
 
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
@@ -77,7 +76,7 @@ export default function Home() {
               <Activity className="h-10 w-10 text-cyan mb-4 group-hover:scale-110 transition-transform flex-shrink-0" />
               <h3 className="text-xl font-semibold mb-3">Atmospheric Sensing & Plume Modeling</h3>
               <p className="text-slate-400 font-sans text-sm leading-relaxed mb-4">
-                Leveraging advanced analytical instrumentation—ranging from integrated mobile laboratories to UAS-mounted trace gas sensors—to conduct high-resolution, real-time chemical tracking. I specialize in Real-Time Data Acquisition System (RT-DAS) engineering and geospatial data fusion, capturing fugitive emissions (methane, VOCs) across extensive terrain.<br /><br />
+                Leveraging advanced analytical instrumentation—ranging from integrated mobile laboratories to UAS-mounted trace gas sensors—to conduct high-resolution, real-time chemical tracking. I specialize in Real-Time Data Acquisition System engineering and geospatial data fusion, capturing fugitive emissions (methane, VOCs) across extensive terrain.<br /><br />
                 These raw telemetry streams are ultimately synthesized into predictive atmospheric dispersion models.
               </p>
               <ul className="mt-auto text-slate-500 text-sm list-disc pl-5 space-y-1.5 marker:text-cyan/50">
@@ -90,13 +89,13 @@ export default function Home() {
 
             <div className="p-6 rounded-xl border border-slate-800 bg-background/50 hover:border-cyan/50 transition-colors group flex flex-col h-full">
               <Anchor className="h-10 w-10 text-cyan mb-4 group-hover:scale-110 transition-transform flex-shrink-0" />
-              <h3 className="text-xl font-semibold mb-3">Extreme-Environment Instrumentation</h3>
+              <h3 className="text-xl font-semibold mb-3">Extreme Environment Instrumentation</h3>
               <p className="text-slate-400 font-sans text-sm leading-relaxed mb-4">
-                As an authority in underwater mass spectrometry, I build mission-critical sensing infrastructure tailored for rigorous deep-water operations. My expertise spans vacuum metrology, membrane interface mechanics, and real-time electrometer data acquisition.<br /><br />
+                As an authority in underwater mass spectrometry, I build mission-critical sensing infrastructure tailored for rigorous deep-water operations. My expertise spans vacuum metrology, membrane interface mechanics, and real-time data acquisition.<br /><br />
                 By translating complex physical chemistry into ruggedized terrestrial and subsea payloads, I enable clients to execute target-positive anomaly detection and definitive hydrocarbon seep analysis across extreme deployment environments.
               </p>
               <ul className="mt-auto text-slate-500 text-sm list-disc pl-5 space-y-1.5 marker:text-cyan/50">
-                <li>Underwater Mass Spectrometry & MIMS</li>
+                <li>Underwater Mass Spectrometry</li>
                 <li>In-Situ Chemical Interface Calibrations</li>
                 <li>Ruggedized Subsea Payload Integration</li>
                 <li>Sensor-Triggered Target-Positive Sampling</li>
