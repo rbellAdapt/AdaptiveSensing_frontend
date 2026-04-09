@@ -7,7 +7,8 @@ import FlightConfigTab from '@/components/uas-simulator/FlightConfigTab';
 import AdaptiveConfigTab from '@/components/uas-simulator/AdaptiveConfigTab';
 import SimulationViewport from '@/components/uas-simulator/SimulationViewport';
 import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
-import { Server } from 'lucide-react';
+import { Server, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import { useSession } from "next-auth/react";
 
 function SimulatorContent() {
@@ -255,18 +256,21 @@ function SimulatorContent() {
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#b0c4de] p-8 font-sans selection:bg-[#00e5ff] selection:text-[#0d1117] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#00e5ff]/5 via-[#0d1117] to-black">
+      <div className="mb-6">
+        <Link
+          href="/"
+          className="inline-flex items-center text-sm font-medium text-[#b0c4de] hover:text-[#00e5ff] transition-colors font-mono"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
+        </Link>
+      </div>
+
       <header className="mb-4 border-b border-[#00e5ff]/30 pb-4 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-[#b0c4de]">
             UAS <span className="text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">Plume Simulator</span>
           </h1>
           <p className="opacity-70 mt-2 text-sm tracking-wide">Adaptive Decision Support for Environmental Monitoring</p>
-        </div>
-        <div className="flex items-center gap-4 text-sm font-mono opacity-80 backdrop-blur-sm bg-black/20 p-3 rounded-full border border-green-500/30">
-          <span className="flex items-center gap-2 text-green-400">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,1)]"></span>
-            System Online
-          </span>
         </div>
       </header>
 

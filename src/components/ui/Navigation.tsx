@@ -6,7 +6,7 @@ import { useState, useRef } from 'react';
 export default function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMouseEnter = () => {
@@ -29,7 +29,7 @@ export default function Navigation() {
               AdaptiveSensing<span className="text-cyan">.io</span>
             </Link>
           </div>
-          
+
           {/* Desktop Nav */}
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8 font-mono text-sm tracking-wide">
             <Link href="/" className="text-slate-300 hover:text-cyan transition-colors px-3 py-2">
@@ -44,7 +44,7 @@ export default function Navigation() {
               onMouseLeave={handleMouseLeave}
             >
               <span className="text-slate-300 hover:text-cyan transition-colors flex items-center">
-                Interactive_Tools
+                Interactive Tools
                 <svg className={`w-4 h-4 ml-1 opacity-70 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180 text-cyan' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
@@ -102,14 +102,14 @@ export default function Navigation() {
           <div className="px-2 pt-2 pb-4 space-y-1 font-mono text-sm">
             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-300 hover:text-cyan hover:bg-slate-800 transition-colors">Home</Link>
             <Link href="/services" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-300 hover:text-cyan hover:bg-slate-800 transition-colors">Services</Link>
-            
+
             <div className="px-3 py-2 mt-2 text-slate-500 font-semibold uppercase tracking-wider text-xs border-b border-slate-800 pb-1">Interactive Tools</div>
             <div className="pl-4 border-l border-slate-800 ml-2 space-y-1">
-                <Link href="/interactive-tools/uas-plume-simulator" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">UAS Plume Simulator</Link>
-                <Link href="/dissolved-gas-calculators" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">Gas Calculators Suite</Link>
-                <Link href="/interactive-tools/oil-spill-simulator" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">Oil Spill Simulator</Link>
+              <Link href="/interactive-tools/uas-plume-simulator" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">UAS Plume Simulator</Link>
+              <Link href="/dissolved-gas-calculators" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">Gas Calculators Suite</Link>
+              <Link href="/interactive-tools/oil-spill-simulator" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-400 hover:text-cyan hover:bg-slate-800 transition-colors">Oil Spill Simulator</Link>
             </div>
-            
+
             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-300 hover:text-cyan hover:bg-slate-800 transition-colors mt-2 border-t border-slate-800 pt-2">About</Link>
           </div>
         </div>

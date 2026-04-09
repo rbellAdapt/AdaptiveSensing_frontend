@@ -5,8 +5,7 @@ last_updated: 2026-04-07
 ---
 
 # Title
-About the Principal
+Ryan Bell, PhD
 
 # Subtitle
-Ryan Bell, PhD
-PRINCIPAL_ENGINEER & FOUNDER
+PRINCIPAL ENGINEER & FOUNDER

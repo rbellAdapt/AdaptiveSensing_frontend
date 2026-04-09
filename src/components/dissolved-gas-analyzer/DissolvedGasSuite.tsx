@@ -7,7 +7,7 @@ import SeawaterProperties from './components/calculators/SeawaterProperties';
 import SourcesModal from './components/SourcesModal';
 
 export default function DissolvedGasSuite() {
-  const [activeTab, setActiveTab] = useState<'concToGas' | 'gasToConc' | 'seawater'>('gasToConc');
+  const [activeTab, setActiveTab] = useState<'concToGas' | 'gasToConc' | 'seawater'>('seawater');
   const [isSourcesOpen, setIsSourcesOpen] = useState(false);
 
   return (
