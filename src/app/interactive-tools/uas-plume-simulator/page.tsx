@@ -7,10 +7,21 @@ import FlightConfigTab from '@/components/uas-simulator/FlightConfigTab';
 import AdaptiveConfigTab from '@/components/uas-simulator/AdaptiveConfigTab';
 import SimulationViewport from '@/components/uas-simulator/SimulationViewport';
 import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
-import { Download } from 'lucide-react';
+import { Server } from 'lucide-react';
+import { useSession } from "next-auth/react";
 
 function SimulatorContent() {
   const { triggerPaywall } = useAuthFunnel();
+  const { status } = useSession();
+
+  const handleConsultingClick = () => {
+    if (status === "authenticated") {
+      window.location.href = "mailto:ryan.bell@adaptivesensing.io?subject=Custom Analysis & Consulting Inquiry";
+    } else {
+      triggerPaywall();
+    }
+  };
+
   const [gridData, setGridData] = useState<any>(null);
   const [gridConfig, setGridConfig] = useState<any>(null);
   const [liveAdaptiveConfig, setLiveAdaptiveConfig] = useState<any>(null);
@@ -345,14 +356,17 @@ function SimulatorContent() {
         </div>
       </main>
 
-      {/* Batch Processing CTA */}
+      {/* Consulting CTA */}
       <div className="fixed bottom-8 right-8 z-40">
         <button 
-          onClick={triggerPaywall}
-          className="group flex items-center gap-3 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-3 rounded-full font-mono text-sm shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1"
+          onClick={handleConsultingClick}
+          className="group flex flex-col items-center justify-center gap-1 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-2 rounded-full font-mono shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 active:scale-95"
         >
-          <Download className="h-4 w-4" />
-          <span>Export Batch Data</span>
+          <div className="flex items-center gap-2 text-sm">
+            <Server className="h-4 w-4" />
+            <span>Request Custom Analysis</span>
+          </div>
+          <span className="text-[10px] text-amber/60 tracking-widest uppercase">Hire an Expert</span>
         </button>
       </div>
 

@@ -53,9 +53,9 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
               <div className="h-16 w-16 bg-amber/10 rounded-full flex items-center justify-center mb-6 border border-amber/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
                 <Lock className="h-8 w-8 text-amber" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-100 mb-2 font-sans tracking-tight">Enterprise Batch Processing</h3>
+              <h3 className="text-2xl font-bold text-slate-100 mb-2 font-sans tracking-tight">Unlimited Simulation Access</h3>
               <p className="text-slate-400 font-sans text-sm leading-relaxed mb-8">
-                High-throughput batch processing and programmatic API access are reserved for commercial partners running dedicated Dockerized deployments.
+                You have reached the guest threshold. Please authenticate to unlock infinite web simulations and secure your session environment.
               </p>
               
               <button onClick={() => signIn("google")} className="w-full bg-slate-100 text-slate-900 font-bold py-3 px-4 rounded-lg flex items-center justify-center mb-4 hover:bg-white transition-colors cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:scale-[1.02]">
@@ -63,9 +63,9 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 Sign in with Google
               </button>
               
-              <a href="mailto:ryan.bell@adaptivesensing.io?subject=Batch Processing Access" className="w-full bg-transparent border border-amber/40 text-amber font-semibold py-3 px-4 rounded-lg flex items-center justify-center hover:bg-amber/10 transition-colors cursor-pointer">
+              <a href="mailto:ryan.bell@adaptivesensing.io?subject=Cloud Licensing & Custom Analysis Request" className="w-full bg-transparent border border-amber/40 text-amber font-semibold py-3 px-4 rounded-lg flex items-center justify-center hover:bg-amber/10 transition-colors cursor-pointer">
                 <Server className="h-5 w-5 mr-3" />
-                Request Commercial Access
+                Consulting & API Licensing
               </a>
               
               <button onClick={() => setLocalShowPaywall(false)} className="mt-6 text-slate-600 text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors">
