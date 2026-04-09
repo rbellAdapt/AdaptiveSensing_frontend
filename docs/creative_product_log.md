@@ -23,3 +23,7 @@
 ---
 **Timestamp:** 2026-04-09 17:34 UTC
 **Insight:** By decoupling the frictionless Google SSO usage gate from the Enterprise Cloud Provisioning funnel, the UI now distinctively segments standard users from High-Value Targets. Furthermore, integrating a silent Google Sheets Apps Script background fetch as a webhook provides an infinitely scalable, zero-maintenance CRM intake pipeline for recording batch-compute specifications directly from enterprise prospects.
+
+---
+**Timestamp:** 2026-04-09 18:04 UTC
+**Insight:** Migrating the NextAuth casual user login tracking away from the external 'Resend' API directly into the centralized Google Sheets CRM (alongside the Enterprise Provisioning flow) drastically reduces architectural fragility. This guarantees unified dataset analysis across user buckets and strips out an unneeded third-party vendor dependency—greatly enhancing the platform's self-contained modularity.

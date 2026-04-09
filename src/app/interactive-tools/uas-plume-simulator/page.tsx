@@ -15,11 +15,7 @@ function SimulatorContent() {
   const { status } = useSession();
 
   const handleConsultingClick = () => {
-    if (status === "authenticated") {
-      triggerEnterpriseModal();
-    } else {
-      triggerPaywall();
-    }
+    triggerEnterpriseModal();
   };
 
   const [gridData, setGridData] = useState<any>(null);

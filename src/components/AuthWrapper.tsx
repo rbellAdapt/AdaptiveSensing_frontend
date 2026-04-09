@@ -128,17 +128,31 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
 
               <div className="bg-slate-800/80 p-4 rounded-lg border border-slate-700 w-full mb-2 text-left">
                 <h4 className="text-sm font-bold text-slate-200 mb-2">Request Cloud Allocation</h4>
-                <p className="text-xs text-slate-400 mb-3">Our automated Stripe checkout is under construction. Please describe your expected volume and compute needs below, and we will manually provision an API key.</p>
+                
+                {!isAuthenticated ? (
+                  <div className="mb-3 p-3 bg-cyan/10 border border-cyan/20 rounded-lg flex items-center justify-between">
+                    <span className="text-xs text-cyan pr-4">You must authenticate to request allocation keys.</span>
+                    <button onClick={() => signIn("google")} className="bg-slate-100 text-slate-900 font-bold py-1.5 px-3 rounded text-xs flex items-center hover:bg-white transition-colors whitespace-nowrap">
+                      <Mail className="h-3 w-3 mr-1.5" />
+                      Sign In
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 mb-3">Our automated Stripe checkout is under construction. Please describe your expected volume and compute needs below, and we will manually provision an API key.</p>
+                )}
+
                 <textarea 
                   id="needsInput"
                   className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-slate-300 h-20 mb-3 focus:outline-none focus:border-cyan" 
                   placeholder="E.g., I need 20,000 REST API batch simulations per month..."
                 ></textarea>
                 <button 
+                  disabled={!isAuthenticated}
                   onClick={(e) => {
                     const btn = e.currentTarget;
                     const needs = (document.getElementById('needsInput') as HTMLTextAreaElement)?.value || 'No specific needs listed (General Request)';
                     const userEmail = session?.user?.email || 'anonymous';
+                    const userName = session?.user?.name || 'Unknown';
                     
                     const scriptURL = process.env.NEXT_PUBLIC_ENTERPRISE_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbzPNZUWr46VSAxzei5TbS294-X_cdpABJVorlq2EPoxYdm-MekVFs7AcwSTR9y1Rv3l_g/exec';
                     
@@ -146,7 +160,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                     btn.innerHTML = '<span class="flex items-center"><div class="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mr-2"></div> Sending...</span>';
                     btn.disabled = true;
 
-                    fetch(`${scriptURL}?email=${encodeURIComponent(userEmail)}&needs=${encodeURIComponent(needs)}`, {
+                    fetch(`${scriptURL}?type=enterprise&email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}&needs=${encodeURIComponent(needs)}`, {
                         method: 'GET',
                         mode: 'no-cors' // Must use no-cors to prevent CORS panic from browser since Google Apps doesn't return CORS headers cleanly
                     }).then(() => {

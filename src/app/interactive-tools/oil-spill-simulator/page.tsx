@@ -11,11 +11,7 @@ function SimulatorContent() {
   const { status } = useSession();
 
   const handleConsultingClick = () => {
-    if (status === "authenticated") {
-      triggerEnterpriseModal();
-    } else {
-      triggerPaywall();
-    }
+    triggerEnterpriseModal();
   };
 
   return (

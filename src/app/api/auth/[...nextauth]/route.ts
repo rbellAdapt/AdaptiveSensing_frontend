@@ -1,9 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { Resend } from "resend";
 import { Redis } from '@upstash/redis';
-
-const resend = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your_resend_api_key' ? new Resend(process.env.RESEND_API_KEY) : null;
 const redis = process.env.UPSTASH_REDIS_REST_URL?.startsWith('https') && process.env.UPSTASH_REDIS_REST_TOKEN
   ? new Redis({
       url: process.env.UPSTASH_REDIS_REST_URL,
@@ -33,23 +30,17 @@ const handler = NextAuth({
           await redis.sadd("captured_leads", user.email);
         }
         
-        // Notify @bo
-        if (resend && process.env.NOTIFICATION_EMAIL) {
+        // Notify @bo via Google Sheets Webhook
+        const scriptURL = process.env.NEXT_PUBLIC_ENTERPRISE_SCRIPT_URL;
+        if (scriptURL) {
           try {
-            await resend.emails.send({
-              from: "AdaptiveSensing Gateway <onboarding@resend.dev>",
-              to: process.env.NOTIFICATION_EMAIL,
-              subject: `New Enterprise Lead: ${user.email}`,
-              html: `
-                <h2>New Prospect Captured!</h2>
-                <p><strong>Name:</strong> ${user.name || "Unknown"}</p>
-                <p><strong>Email:</strong> ${user.email}</p>
-                <p>This user just bypassed the paywall and requested simulation dashboard access.</p>
-                <p><a href="https://console.upstash.com/">Log in to Upstash Console</a> to view the master list.</p>
-              `
+            const emailParam = encodeURIComponent(user.email);
+            const nameParam = encodeURIComponent(user.name || "Unknown");
+            await fetch(`${scriptURL}?type=casual&email=${emailParam}&name=${nameParam}`, {
+              method: 'GET'
             });
           } catch (e) {
-            console.error("Failed to send lead email", e);
+            console.error("Failed to hit Google Sheets webhook", e);
           }
         }
       }
