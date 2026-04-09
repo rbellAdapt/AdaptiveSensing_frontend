@@ -29,14 +29,14 @@ function SimulatorContent() {
   const [flightConfig, setFlightConfig] = useState<any>(null);
   const [flightData, setFlightData] = useState<any>(null);
   const [hitData, setHitData] = useState<any>(null);
-  
-  const [hitDetectionConfig, setHitDetectionConfig] = useState<any>({ 
-    detection_sigma: 3.0, 
-    correlation_window: 20, 
-    group_time_threshold_sec: 10.0, 
-    group_ratio_tolerance: 0.3 
+
+  const [hitDetectionConfig, setHitDetectionConfig] = useState<any>({
+    detection_sigma: 3.0,
+    correlation_window: 20,
+    group_time_threshold_sec: 10.0,
+    group_ratio_tolerance: 0.3
   });
-  
+
   // Accordion active tab state
   const [activeTab, setActiveTab] = useState<'grid' | 'plume' | 'sensors' | 'flight' | 'adaptive'>('grid');
 
@@ -71,49 +71,49 @@ function SimulatorContent() {
         };
         const getNoise = (std: number) => {
           let u = 0, v = 0;
-          while(u === 0) u = stableRandom();
-          while(v === 0) v = stableRandom();
+          while (u === 0) u = stableRandom();
+          while (v === 0) v = stableRandom();
           return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * std;
         };
-        
+
         let last_x = 0, last_y = 0, last_u = 0, last_v = 0, last_wind_dir = 270.0;
         let last_ch4 = ch_base, last_c2h6 = c2_base;
-        
+
         let next_gps_time = 0;
         let next_anemometer_time = 0;
         let next_gas_time = 0;
 
         for (let i = 0; i <= 30 * masterHz; i++) {
           const time = i / masterHz;
-          
+
           if (time >= next_gps_time - 0.0001) {
-              last_x = speedMs * time + getNoise(gpsJitterMeters);
-              last_y = getNoise(gpsJitterMeters);
-              next_gps_time += 1.0 / gpsHz;
+            last_x = speedMs * time + getNoise(gpsJitterMeters);
+            last_y = getNoise(gpsJitterMeters);
+            next_gps_time += 1.0 / gpsHz;
           }
-          
+
           if (time >= next_anemometer_time - 0.0001) {
-              let curWindAng = 270.0 + getNoise(windAngJitter);
-              if (curWindAng < 0) curWindAng += 360;
-              else if (curWindAng >= 360) curWindAng -= 360;
-              
-              const speed = Math.max(0, 4.8 + getNoise(windIntJitter));
-              last_u = speed * Math.cos(curWindAng * Math.PI / 180.0);
-              last_v = Math.min(speed * Math.sin(curWindAng * Math.PI / 180.0), 0);
-              last_wind_dir = curWindAng;
-              next_anemometer_time += 1.0 / anemometerHz;
+            let curWindAng = 270.0 + getNoise(windAngJitter);
+            if (curWindAng < 0) curWindAng += 360;
+            else if (curWindAng >= 360) curWindAng -= 360;
+
+            const speed = Math.max(0, 4.8 + getNoise(windIntJitter));
+            last_u = speed * Math.cos(curWindAng * Math.PI / 180.0);
+            last_v = Math.min(speed * Math.sin(curWindAng * Math.PI / 180.0), 0);
+            last_wind_dir = curWindAng;
+            next_anemometer_time += 1.0 / anemometerHz;
           }
-          
+
           if (time >= next_gas_time - 0.0001) {
-              const gaussian_shape = Math.exp(-Math.pow(time - 15.0, 2) / (2 * Math.pow(1.5, 2)));
-              const ch4_enhancement = 20.0 * ch4_std * gaussian_shape;
-              const c2h6_enhancement = ch4_enhancement * c2Ratio;
-              
-              last_ch4 = Math.max(0, ch_base + getNoise(ch4_std) + ch4_enhancement);
-              last_c2h6 = Math.max(0, c2_base + getNoise(c2h6_std) + c2h6_enhancement);
-              next_gas_time += 1.0 / gasHz;
+            const gaussian_shape = Math.exp(-Math.pow(time - 15.0, 2) / (2 * Math.pow(1.5, 2)));
+            const ch4_enhancement = 20.0 * ch4_std * gaussian_shape;
+            const c2h6_enhancement = ch4_enhancement * c2Ratio;
+
+            last_ch4 = Math.max(0, ch_base + getNoise(ch4_std) + ch4_enhancement);
+            last_c2h6 = Math.max(0, c2_base + getNoise(c2h6_std) + c2h6_enhancement);
+            next_gas_time += 1.0 / gasHz;
           }
-          
+
           ts.push({
             t_sec: time,
             x: last_x,
@@ -127,7 +127,7 @@ function SimulatorContent() {
           });
         }
         setDemoTimeseries(ts);
-        
+
         const enhancedConfig = {
           ...hitDetectionConfig,
           wind_direction_deg: 270,
@@ -138,16 +138,16 @@ function SimulatorContent() {
           source_estimation_method: "optimizer_with_mask",
           enable_proximity_clustering: liveAdaptiveConfig?.enableProximityClustering ?? true
         };
-        
+
         fetch('/api/simulate/analyze_hits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ timeseries: ts, config: enhancedConfig })
         })
-        .then(r => r.json())
-        .then(data => setDemoHitData(data))
-        .catch(e => console.error(e));
-        
+          .then(r => r.json())
+          .then(data => setDemoHitData(data))
+          .catch(e => console.error(e));
+
       }, 500);
       return () => clearTimeout(timeoutId);
     }
@@ -185,7 +185,7 @@ function SimulatorContent() {
       });
       const data = await response.json();
       setHitData(data);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
   };
@@ -193,7 +193,7 @@ function SimulatorContent() {
   const handleMasterSimulate = async () => {
     if (!gridConfig || !plumeConfig || !sensorConfig || !flightConfig || !hitDetectionConfig || !liveAdaptiveConfig) return;
     setIsSimulating(true);
-    
+
     const payload = {
       grid: gridConfig,
       plume: plumeConfig,
@@ -219,7 +219,7 @@ function SimulatorContent() {
       },
       random_seed: Math.random()
     };
-    
+
     try {
       // 1. Gateway Traffic Cop Ping (Rate Limit check)
       const gatewayRes = await fetch('/api/gateway', {
@@ -240,12 +240,12 @@ function SimulatorContent() {
       });
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
       const data = await res.json();
-      
+
       const mergedHitCfg = { ...payload.hit_detection, adaptive_threshold: payload.adaptive.confidence_threshold };
       setHitDetectionConfig(mergedHitCfg);
       setFlightData({ ...data.path, timeseries: data.timeseries, snapshots: data.snapshots });
       handleAnalyzeHits(mergedHitCfg, data.timeseries);
-      
+
     } catch (err: any) {
       console.error(err);
       alert("Simulation failed.");
@@ -272,7 +272,7 @@ function SimulatorContent() {
 
       <main className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-2">
-          <GridConfigTab 
+          <GridConfigTab
             isOpen={activeTab === 'grid'}
             onToggle={() => setActiveTab('grid')}
             onSimulationSuccess={(data: any, config: any) => {
@@ -283,30 +283,30 @@ function SimulatorContent() {
               setSensorConfig(null);
               setFlightData(null);
               setHitData(null);
-            }} 
+            }}
           />
-          <PlumeConfigTab 
+          <PlumeConfigTab
             isOpen={activeTab === 'plume'}
             onToggle={() => setActiveTab('plume')}
-            gridConfig={gridConfig} 
+            gridConfig={gridConfig}
             onSimulationSuccess={(data: any, config: any) => {
               setPlumeData(data);
               setPlumeConfig(config);
-            }} 
-            disabled={!gridData} 
+            }}
+            disabled={!gridData}
             suggestedReady={!!gridData && !plumeData}
           />
-          <SensorConfigTab 
+          <SensorConfigTab
             isOpen={activeTab === 'sensors'}
             onToggle={() => setActiveTab('sensors')}
             onPreviewUpdate={setLiveSensorConfig}
-            onSimulationSuccess={setSensorConfig} 
+            onSimulationSuccess={setSensorConfig}
             hitDetectionConfig={hitDetectionConfig}
             onHitDetectionUpdate={setHitDetectionConfig}
-            disabled={!plumeData} 
+            disabled={!plumeData}
             suggestedReady={!!plumeData && !sensorConfig}
           />
-          <FlightConfigTab 
+          <FlightConfigTab
             isOpen={activeTab === 'flight'}
             onToggle={() => setActiveTab('flight')}
             gridConfig={gridConfig}
@@ -319,7 +319,7 @@ function SimulatorContent() {
             disabled={!sensorConfig}
             suggestedReady={!!sensorConfig && !flightData}
           />
-          <AdaptiveConfigTab 
+          <AdaptiveConfigTab
             isOpen={activeTab === 'adaptive'}
             onToggle={() => setActiveTab('adaptive')}
             gridConfig={gridConfig}
@@ -331,20 +331,20 @@ function SimulatorContent() {
             disabled={!flightConfig}
             suggestedReady={!!flightData}
           />
-          
+
           <div className="mt-4 border-t border-purple-500/30 pt-4">
-              <button 
-                onClick={handleMasterSimulate}
-                disabled={!gridConfig || !flightConfig || isSimulating || !liveAdaptiveConfig}
-                title={(!gridConfig || !flightConfig) ? "Grid AND Flight Paths must be locked before execution." : "Execute full timeline."}
-                className={`w-full py-4 rounded-xl font-extrabold tracking-widest uppercase transition-all flex items-center justify-center gap-3 ${!gridConfig || !flightConfig ? 'bg-black/40 text-white/20 cursor-not-allowed border border-white/5' : isSimulating ? 'bg-purple-900/40 text-purple-400 border border-purple-700/50 cursor-wait' : 'bg-purple-500/20 text-purple-400 border-2 border-purple-500/50 hover:bg-purple-500/30 hover:border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] cursor-pointer'}`}
-              >
-                {isSimulating ? (
-                  <> <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Generating Timeline... </>
-                ) : (
-                  '🚀 Simulate & Analyze Flight'
-                )}
-              </button>
+            <button
+              onClick={handleMasterSimulate}
+              disabled={!gridConfig || !flightConfig || isSimulating || !liveAdaptiveConfig}
+              title={(!gridConfig || !flightConfig) ? "Grid AND Flight Paths must be locked before execution." : "Execute full timeline."}
+              className={`w-full py-4 rounded-xl font-extrabold tracking-widest uppercase transition-all flex items-center justify-center gap-3 ${!gridConfig || !flightConfig ? 'bg-black/40 text-white/20 cursor-not-allowed border border-white/5' : isSimulating ? 'bg-purple-900/40 text-purple-400 border border-purple-700/50 cursor-wait' : 'bg-purple-500/20 text-purple-400 border-2 border-purple-500/50 hover:bg-purple-500/30 hover:border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] cursor-pointer'}`}
+            >
+              {isSimulating ? (
+                <> <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Generating Timeline... </>
+              ) : (
+                '🚀 Simulate & Analyze Flight'
+              )}
+            </button>
           </div>
         </div>
         <div className="lg:col-span-8 backdrop-blur-xl bg-black/10 rounded-xl p-1 border border-white/5 flex flex-col">
@@ -354,7 +354,7 @@ function SimulatorContent() {
 
       {/* Consulting CTA */}
       <div className="fixed bottom-8 right-8 z-40">
-        <button 
+        <button
           onClick={handleConsultingClick}
           className="group flex flex-col items-center justify-center gap-1 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-2 rounded-full font-mono shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 active:scale-95"
         >

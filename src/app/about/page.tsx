@@ -3,6 +3,11 @@ import { Shield, BrainCircuit, Droplets } from "lucide-react";
 export const metadata = {
   title: "About | AdaptiveSensing.io",
   description: "Ryan Bell, PhD. 20+ years bridging Chemical Oceanography, Data Science, and Hardware Engineering.",
+  openGraph: {
+    title: "About | AdaptiveSensing.io",
+    description: "Ryan Bell, PhD. 20+ years bridging Chemical Oceanography, Data Science, and Hardware Engineering.",
+    url: 'https://adaptivesensing.io/about',
+  }
 };
 
 export default function AboutPage() {

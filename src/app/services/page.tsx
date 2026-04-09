@@ -4,6 +4,11 @@ import Link from "next/link";
 export const metadata = {
   title: "Services | AdaptiveSensing.io",
   description: "Specialized engineering and analytical sensing services for Atmospheric, Field, and Subsea environments.",
+  openGraph: {
+    title: "Services | AdaptiveSensing.io",
+    description: "Specialized engineering and analytical sensing services for Atmospheric, Field, and Subsea environments.",
+    url: 'https://adaptivesensing.io/services',
+  }
 };
 
 export default function ServicesPage() {

@@ -3,6 +3,11 @@ import { Shield, Microscope, Droplets } from "lucide-react";
 export const metadata = {
   title: "Case Studies | AdaptiveSensing.io",
   description: "High-stakes analytical integration case studies including DARPA, MKS Instruments, and Deepwater Horizon.",
+  openGraph: {
+    title: "Case Studies | AdaptiveSensing.io",
+    description: "High-stakes analytical integration case studies including DARPA, MKS Instruments, and Deepwater Horizon.",
+    url: 'https://adaptivesensing.io/case-studies',
+  }
 };
 
 export default function CaseStudiesPage() {

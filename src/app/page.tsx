@@ -10,9 +10,9 @@ export default function Home() {
 
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center space-x-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1 text-sm text-cyan backdrop-blur-sm mb-8 font-mono">
-              <span className="flex h-2 w-2 rounded-full bg-cyan"></span>
-              <span>Advanced Data Science & Instrumentation</span>
+            <div className="inline-flex items-start sm:items-center max-w-full space-x-2 rounded-xl sm:rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1.5 sm:py-1 text-xs sm:text-sm text-cyan backdrop-blur-sm mb-8 font-mono">
+              <span className="flex-shrink-0 flex h-2 w-2 rounded-full bg-cyan mt-1 sm:mt-0"></span>
+              <span className="text-left leading-relaxed">Advanced Data Science & Instrumentation</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-100 mb-6 font-sans">
