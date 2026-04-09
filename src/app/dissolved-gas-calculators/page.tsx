@@ -7,12 +7,12 @@ import { AuthWrapper, useAuthFunnel } from '@/components/AuthWrapper';
 import { useSession } from "next-auth/react";
 
 function CalculatorContent() {
-  const { triggerPaywall } = useAuthFunnel();
+  const { triggerPaywall, triggerEnterpriseModal } = useAuthFunnel();
   const { status } = useSession();
 
   const handleConsultingClick = () => {
     if (status === "authenticated") {
-      window.location.href = "mailto:ryan.bell@adaptivesensing.io?subject=Custom Analysis & Consulting Inquiry";
+      triggerEnterpriseModal();
     } else {
       triggerPaywall();
     }
@@ -39,9 +39,9 @@ function CalculatorContent() {
         >
           <div className="flex items-center gap-2 text-sm">
             <Server className="h-4 w-4" />
-            <span>Request Custom Analysis</span>
+            <span>API & Batch Access</span>
           </div>
-          <span className="text-[10px] text-amber/60 tracking-widest uppercase">Hire an Expert</span>
+          <span className="text-[10px] text-amber/60 tracking-widest uppercase">Enterprise & Consulting</span>
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 # Session Handover
 
-**Summary:** Resolved variable reference error in Next.js API Gateway to stabilize the production backend ahead of the Vercel launch.
-**Current Task:** Vercel Launch Finalization
-**Next Step:** Launch `adaptivesensing.io` on Vercel and map the five required `.env.local` persistence/auth variables into the production cloud console.
-**Timestamp:** 2026-04-08 13:40:00-06:00
+**Summary:** Decoupled Google SSO Paywall logic from the Enterprise Inquiry funnel, integrating a dedicated Cloud Allocation request modal that silently pipelines usage specs to a Google Sheets Apps Script backend.
+**Current Task:** Funnel Segregation & User Ops
+**Next Step:** Execute Phase 3: Stripe CLI integration now that the free-tier verification UI is cleanly segmented from enterprise sales.
+**Timestamp:** 2026-04-09 11:34:00-06:00

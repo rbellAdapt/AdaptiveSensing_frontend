@@ -16,3 +16,12 @@
 
 - Removed placeholder tools (Fick's & DSP) from UI for MVP consolidation.
 - Authored deep agentic orchestration qualifications artifact.
+
+**April 8-9, 2026**
+- Resolved Edge API Gateway syntax and persistence regressions.
+- Upgraded the NextAuth pipeline and deployed it via Vercel to `adaptivesensing.io`.
+- Wired Upstash Redis for stateless Edge data persistence and Resend API for lead email capture.
+- Troubleshooted and executed root/www domain binding in Vercel with Spaceship Advanced DNS configuration.
+- Solved an OAuth `400: redirect_uri_mismatch` failure by updating Google Cloud Console constraints.
+- Integrated a UI "B2B Consulting Pivot" across all Simulation pages, converting dead "batch export" elements into interactive, auth-dependent "Hire an Expert" consultation triggers.
+- Finalized `/atomic-commit-push` to bridge all local code changes synchronously to the production environment.

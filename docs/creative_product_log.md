@@ -19,3 +19,7 @@
 ---
 **Timestamp:** 2026-04-08 19:25 UTC
 **Insight:** Upgrading the Next.js API Gateway to utilize serverless database persistence (Upstash Redis) rather than in-memory tracking creates a highly robust and scaleable data ingestion pipeline. Paired with the NextAuth/Resend email trigger pipeline, AdaptiveSensing has effectively converted simple frontend math calculators into a persistent B2B lead-farming machine that automatically categorizes enterprise prospects and pushes their direct contact information into the consulting pipeline securely and with zero human intervention.
+
+---
+**Timestamp:** 2026-04-09 17:34 UTC
+**Insight:** By decoupling the frictionless Google SSO usage gate from the Enterprise Cloud Provisioning funnel, the UI now distinctively segments standard users from High-Value Targets. Furthermore, integrating a silent Google Sheets Apps Script background fetch as a webhook provides an infinitely scalable, zero-maintenance CRM intake pipeline for recording batch-compute specifications directly from enterprise prospects.
