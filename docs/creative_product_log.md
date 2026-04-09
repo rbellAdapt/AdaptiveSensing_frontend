@@ -27,3 +27,7 @@
 ---
 **Timestamp:** 2026-04-09 18:04 UTC
 **Insight:** Migrating the NextAuth casual user login tracking away from the external 'Resend' API directly into the centralized Google Sheets CRM (alongside the Enterprise Provisioning flow) drastically reduces architectural fragility. This guarantees unified dataset analysis across user buckets and strips out an unneeded third-party vendor dependency—greatly enhancing the platform's self-contained modularity.
+
+---
+**Timestamp:** 2026-04-09 18:16 UTC
+**Insight:** Aggressively refining the Enterprise provisioning request modal to flawlessly render without vertical scrolling guarantees higher conversion fidelity across fractured devices, directly supporting the Phase 3 B2B sales pipeline.
