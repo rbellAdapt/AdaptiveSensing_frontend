@@ -23,7 +23,7 @@ export default function Home() {
             </h1>
 
             <p className="max-w-4xl text-lg md:text-xl text-slate-400 mb-10 font-sans leading-relaxed">
-              AdaptiveSensing.io is the independent engineering and data science consulting practice of <strong className="text-slate-200 font-semibold">Dr. Ryan Bell</strong>. Bridging PhD-level environmental chemistry with field-deployable engineering to orchestrate end-to-end intelligence pipelines. I design, build, and deploy advanced analytical instrumentation and quantitative models for high-stakes operations in extreme environments.
+              AdaptiveSensing.io is the independent engineering and data science consulting practice of <strong className="text-slate-200 font-semibold whitespace-nowrap">Dr. Ryan Bell</strong>. Bridging PhD-level environmental chemistry with field-deployable engineering to orchestrate end-to-end intelligence pipelines. I design, build, and deploy advanced analytical instrumentation and quantitative models for high-stakes operations in extreme environments.
             </p>
 
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
@@ -52,7 +52,7 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-3xl font-bold text-slate-200 font-sans tracking-tight mb-4">Core Consulting Capabilities</h2>
             <p className="max-w-4xl text-slate-400 font-sans text-base leading-relaxed">
-              Drawing on 20+ years of experience integrating advanced sensors with real-time data architectures, Dr. Bell provides specialized solutions that bridge the gap between academic research and mission-critical commercial operations.
+              Drawing on 20+ years of experience integrating advanced sensors with real-time data architectures, <span className="whitespace-nowrap">Dr. Bell</span> provides specialized solutions that bridge the gap between academic research and mission-critical commercial operations.
             </p>
           </div>
 

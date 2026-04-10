@@ -9,10 +9,10 @@ export default function TerminalAuditHook() {
   return (
     <div className="border border-slate-800 rounded-xl bg-slate-950 p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] max-w-4xl mx-auto flex flex-col items-center text-center mt-12 mb-8">
       <h3 className="text-2xl font-bold font-sans text-slate-200 tracking-tight mb-3">
-        Ready to deploy custom telemetry?
+        Ready to deploy custom solutions?
       </h3>
       <p className="text-slate-400 font-sans text-sm md:text-base leading-relaxed max-w-2xl mb-8">
-        Dr. Bell&apos;s consulting schedule is currently prioritizing high-impact subsea, atmospheric, and defense contracts. Discuss custom payload integration or dedicated cloud allocation directly.
+        <span className="whitespace-nowrap">Dr. Bell&apos;s</span> consulting schedule is currently prioritizing high-impact subsea, atmospheric, and defense contracts. Discuss custom payload integration or dedicated cloud allocation directly.
       </p>
 
       <button
@@ -21,7 +21,7 @@ export default function TerminalAuditHook() {
       >
         <div className="flex items-center gap-3">
           <Server className="h-4 w-4" />
-          <span>Initialize Audit Request</span>
+          <span>Begin Request</span>
         </div>
       </button>
     </div>

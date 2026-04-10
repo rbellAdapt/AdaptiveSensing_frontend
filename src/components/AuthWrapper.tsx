@@ -44,16 +44,41 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const showPaywall = localShowPaywall && !isAuthenticated;
 
   const triggerPaywall = () => {
-    if (!isAuthenticated) setLocalShowPaywall(true);
+    if (!isAuthenticated) {
+      setLocalShowPaywall(true);
+      window.history.pushState({ modalOpen: true }, '');
+    }
   };
 
   const triggerEnterpriseModal = () => {
     setShowEnterpriseModal(true);
+    window.history.pushState({ modalOpen: true }, '');
   };
 
   const triggerGeneralModal = () => {
     setShowGeneralModal(true);
+    window.history.pushState({ modalOpen: true }, '');
   };
+
+  const closeAllModals = () => {
+    setLocalShowPaywall(false);
+    setShowEnterpriseModal(false);
+    setShowGeneralModal(false);
+    if (window.history.state?.modalOpen) {
+      window.history.back();
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      // Whenever the user hits the browser back button, definitively close any open modals
+      setLocalShowPaywall(false);
+      setShowEnterpriseModal(false);
+      setShowGeneralModal(false);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ triggerPaywall, triggerEnterpriseModal, triggerGeneralModal }}>
@@ -129,8 +154,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 Sign in with Google
               </button>
 
-              <button onClick={() => setLocalShowPaywall(false)} className="mt-6 text-slate-600 text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors">
-                [ Close Modal ]
+              <button onClick={closeAllModals} className="mt-6 text-slate-600 text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors">
+                [ Close Dialog ]
               </button>
             </div>
           </div>
@@ -217,7 +242,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                       mode: 'no-cors' // Must use no-cors to prevent CORS panic from browser since Google Apps doesn't return CORS headers cleanly
                     }).then(() => {
                       btn.innerHTML = 'Transmission Complete ✓';
-                      setTimeout(() => setShowEnterpriseModal(false), 2000);
+                      setTimeout(() => closeAllModals(), 2000);
                     }).catch(error => {
                       console.error('Error recording to proxy sheet!', error.message);
                       // Fallback
@@ -233,8 +258,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 </button>
               </div>
 
-              <button onClick={() => setShowEnterpriseModal(false)} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
-                [ Close Modal ]
+              <button onClick={closeAllModals} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
+                [ Close Dialog ]
               </button>
             </div>
           </div>
@@ -291,7 +316,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                       mode: 'no-cors'
                     }).then(() => {
                       btn.innerHTML = 'Transmission Complete ✓';
-                      setTimeout(() => setShowGeneralModal(false), 2000);
+                      setTimeout(() => closeAllModals(), 2000);
                     }).catch(error => {
                       console.error('Error recording to proxy sheet!', error.message);
                       window.location.href = `mailto:ryan.bell@adaptivesensing.io?subject=General Consulting Request&body=${encodeURIComponent(needs)}`;
@@ -306,8 +331,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 </button>
               </div>
 
-              <button onClick={() => setShowGeneralModal(false)} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
-                [ Close Modal ]
+              <button onClick={closeAllModals} className="mt-4 md:mt-6 text-slate-600 text-[10px] md:text-xs hover:text-slate-400 font-mono tracking-widest uppercase transition-colors shrink-0">
+                [ Close Dialog ]
               </button>
             </div>
           </div>

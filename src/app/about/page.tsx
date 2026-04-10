@@ -23,7 +23,7 @@ export default function AboutPage() {
             </h1>
             <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <div>
-                    <h2 className="text-2xl font-semibold text-cyan font-sans">Ryan Bell, PhD</h2>
+                    <h2 className="text-2xl font-semibold text-cyan font-sans whitespace-nowrap">Ryan Bell, PhD</h2>
                     <p className="font-mono text-slate-400 text-sm mt-1">PRINCIPAL_ENGINEER & FOUNDER</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@ export default function AboutPage() {
         <section className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-6 text-slate-300 font-sans leading-relaxed text-lg">
                 <p>
-                    With over 20 years of experience operating at the intersection of <strong>hardware integration, applied mathematics, and physical sciences</strong>, Ryan Bell specializes in solving analytical challenges in environments where failure is not an option.
+                    With over 20 years of experience operating at the intersection of <strong>hardware integration, applied mathematics, and physical sciences</strong>, <span className="whitespace-nowrap">Ryan Bell</span> specializes in solving analytical challenges in environments where failure is not an option.
                 </p>
                 <p>
                     His career is defined by a cross-disciplinary approach: merging the rigorous phenomenology of Chemical Oceanography with the agile, algorithmic mindset of Data Science. This unique perspective allows for the development of bespoke instrumentation—such as high-pressure Underwater Mass Spectrometers (UMS)—that doesn&apos;t just survive extreme gradients, but actively processes real-time intelligence.
