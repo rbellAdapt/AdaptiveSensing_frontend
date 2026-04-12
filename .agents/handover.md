@@ -1,6 +1,6 @@
 # Session Handover
 
-**Summary:** Implemented secure 'Dialog Trapping' via popstate browser back-button interception, updated UI terminology, and enforced anti-wrapping typography styling.
+**Summary:** Hot-patched General Consulting form to route through the proven enterprise API webhook while injecting payload discriminators to bypass undocumented Apps Script validation failures.
 **Current Task:** Contact & Architecture Audit Funnel
 **Next Step:** Integration of Stripe CLI for automated payment gating.
-**Timestamp:** 2026-04-09 21:29:17-06:00
+**Timestamp:** 2026-04-11 20:39:25-06:00

@@ -311,7 +311,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                     btn.innerHTML = '<span class="flex items-center"><div class="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin mr-2"></div> Sending...</span>';
                     btn.disabled = true;
 
-                    fetch(`${scriptURL}?type=consulting&email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}&needs=${encodeURIComponent(needs)}`, {
+                    fetch(`${scriptURL}?type=enterprise&email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}&needs=${encodeURIComponent(`[GENERAL CONSULTING REQUEST] ${needs}`)}`, {
                       method: 'GET',
                       mode: 'no-cors'
                     }).then(() => {
