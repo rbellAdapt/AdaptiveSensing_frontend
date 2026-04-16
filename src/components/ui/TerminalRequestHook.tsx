@@ -3,7 +3,7 @@
 import { Server } from "lucide-react";
 import { useAuthFunnel } from "@/components/AuthWrapper";
 
-export default function TerminalAuditHook() {
+export default function TerminalRequestHook() {
   const { triggerGeneralModal } = useAuthFunnel();
 
   return (
@@ -11,10 +11,6 @@ export default function TerminalAuditHook() {
       <h3 className="text-2xl font-bold font-sans text-slate-200 tracking-tight mb-3">
         Ready to deploy custom solutions?
       </h3>
-      <p className="text-slate-400 font-sans text-sm md:text-base leading-relaxed max-w-2xl mb-8">
-        <span className="whitespace-nowrap">Dr. Bell&apos;s</span> consulting schedule is currently prioritizing high-impact subsea, atmospheric, and defense contracts. Discuss custom payload integration or dedicated cloud allocation directly.
-      </p>
-
       <button
         onClick={triggerGeneralModal}
         className="group flex flex-col items-center justify-center gap-1 bg-cyan/10 hover:bg-cyan/20 border border-cyan/40 text-cyan px-8 py-3 rounded font-mono shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:shadow-[0_0_25px_rgba(0,229,255,0.3)] transition-all active:scale-95 uppercase tracking-widest text-sm"

@@ -1,4 +1,5 @@
 import { Shield, BrainCircuit, Droplets } from "lucide-react";
+import TerminalRequestHook from "@/components/ui/TerminalRequestHook";
 
 export const metadata = {
   title: "About | AdaptiveSensing.io",
@@ -44,6 +45,9 @@ export default function AboutPage() {
                 </p>
                 <p>
                     Rather than relying on off-the-shelf black boxes, Ryan architects complete, end-to-end data pipelines. From raw RS-232/485 serial communication with custom C++ firmware, up through complex Python spectral deconvolution arrays, the goal remains constant: reducing latency and increasing mathematical precision for R&D Directors and Defense Contractors.
+                </p>
+                <p>
+                    Deploying isolated systems is only half the equation. I approach every engagement through the lens of a Technical Product Manager—mapping the entire value stream to ensure discrete components continuously compound into measurable business logic. By building in agile feedback loops and rigorous constraint analysis, I systematically optimize the architecture long after the initial commit.
                 </p>
             </div>
             
@@ -186,6 +190,7 @@ export default function AboutPage() {
            </div>
         </section>
 
+        <TerminalRequestHook />
       </div>
     </div>
   );

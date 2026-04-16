@@ -1,6 +1,6 @@
 import { ArrowRight, Activity, Cpu, Anchor, ShieldCheck, Leaf, Map } from "lucide-react";
 import Link from "next/link";
-import TerminalAuditHook from "@/components/ui/TerminalAuditHook";
+import TerminalRequestHook from "@/components/ui/TerminalRequestHook";
 
 export const metadata = {
   title: "Services | AdaptiveSensing.io",
@@ -166,6 +166,10 @@ export default function ServicesPage() {
                   <span className="text-amber mr-2 font-mono">{">"}</span>
                   Full-Stack Hardware Integration
                 </li>
+                <li className="flex items-start">
+                  <span className="text-amber mr-2 font-mono">{">"}</span>
+                  Governing full-stack execution with strict Technical Product Management principles: identifying bottlenecks and engineering continuous, iterative improvements across the entire value stream, rather than simply delivering static components.
+                </li>
               </ul>
             </div>
           </div>
@@ -215,7 +219,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <TerminalAuditHook />
+        <TerminalRequestHook />
       </div>
     </div>
   );

@@ -28,17 +28,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const [localShowPaywall, setLocalShowPaywall] = useState(false);
   const [showEnterpriseModal, setShowEnterpriseModal] = useState(false);
   const [showGeneralModal, setShowGeneralModal] = useState(false);
-  const [showIntegrationBanner, setShowIntegrationBanner] = useState(false);
   const pathname = usePathname();
   const isInteractiveToolRoute = pathname?.includes('/interactive-tools') || pathname?.includes('/dissolved-gas-calculators');
-
-  useEffect(() => {
-    if (!isInteractiveToolRoute) return;
-    const timer = setTimeout(() => {
-      setShowIntegrationBanner(true);
-    }, 90000); // 90 seconds
-    return () => clearTimeout(timer);
-  }, [isInteractiveToolRoute]);
 
   const isAuthenticated = status === "authenticated";
   const showPaywall = localShowPaywall && !isAuthenticated;
@@ -116,26 +107,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
           )}
         </div>
 
-        {/* Strategy 2: Contextual Slide-up Banner */}
-        {isInteractiveToolRoute && (
-          <div className={`fixed bottom-0 left-0 right-0 sm:bottom-6 sm:left-6 sm:right-auto z-[90] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showIntegrationBanner && !showPaywall && !showEnterpriseModal && !showGeneralModal ? 'translate-y-0 opacity-100' : 'translate-y-full sm:translate-y-24 opacity-0 pointer-events-none'}`}>
-            <div className="bg-[#0b0f14]/95 border-t border-x sm:border border-[#00e5ff]/40 sm:rounded-xl p-4 sm:p-5 max-w-sm shadow-[0_0_30px_rgba(0,229,255,0.15)] flex flex-col relative backdrop-blur-md">
-              <button onClick={() => setShowIntegrationBanner(false)} className="absolute top-3 right-3 text-slate-500 hover:text-white transition-colors">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-              <div className="flex items-start gap-3 mb-3">
-                <div className="mt-0.5 bg-[#00e5ff]/10 p-2 rounded-lg text-[#00e5ff]"><Server className="w-4 h-4" /></div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-200 font-sans tracking-tight leading-tight">Processing extensive datasets?</h4>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">We deploy automated telemetry pipelines for extreme-environments.</p>
-                </div>
-              </div>
-              <button onClick={() => { setShowIntegrationBanner(false); triggerEnterpriseModal(); }} className="w-full mt-1 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 font-mono text-[11px] uppercase tracking-wider py-2 rounded transition-all active:scale-95">
-                Request Integration Audit
-              </button>
-            </div>
-          </div>
-        )}
+
 
         {/* The Gated Paywall / Google Auth Modal */}
         {showPaywall && (
@@ -165,7 +137,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         {showEnterpriseModal && (
           <div className="fixed inset-0 z-[105] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
             <div className="bg-slate-900 border border-slate-700 p-6 md:p-8 rounded-xl max-w-lg w-full max-h-[95vh] overflow-y-auto shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col relative text-center">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-1 md:mb-2 font-sans tracking-tight shrink-0">Technical Architecture Audit</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-1 md:mb-2 font-sans tracking-tight shrink-0">Technical Requests</h3>
               <p className="text-slate-400 font-sans text-xs md:text-sm leading-relaxed mb-4 md:mb-6 shrink-0">
                 Discuss custom payload integration, dedicated GPU cloud allocation, or batch API integration.
               </p>
@@ -201,7 +173,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
               </div>
 
               <div className="bg-slate-800/80 p-3 md:p-4 rounded-lg border border-slate-700 w-full mb-1 md:mb-2 text-left">
-                <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Technical Architecture Audit</h4>
+                <h4 className="text-[13px] md:text-sm font-bold text-slate-200 mb-1 md:mb-2">Request Advanced Features</h4>
 
                 {!isAuthenticated ? (
                   <div className="mb-2 p-3 bg-cyan/5 border border-cyan/20 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
@@ -215,7 +187,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                     </button>
                   </div>
                 ) : (
-                  <p className="text-[11px] md:text-xs text-slate-400 mb-2">Our automated Stripe checkout is under construction. Please describe your expected compute needs below.</p>
+                  <p className="text-[11px] md:text-xs text-slate-400 mb-2">Please describe your expected compute needs below.</p>
                 )}
 
                 <textarea
@@ -289,7 +261,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                     </button>
                   </div>
                 ) : (
-                  <p className="text-[11px] md:text-xs text-slate-400 mb-2">Our automated Stripe checkout is under construction. Please describe your project requirements below.</p>
+                  <p className="text-[11px] md:text-xs text-slate-400 mb-2">Please describe your project requirements below.</p>
                 )}
 
                 <textarea

@@ -360,7 +360,7 @@ function SimulatorContent() {
       <div className="fixed bottom-8 right-8 z-40">
         <button
           onClick={handleConsultingClick}
-          className="group flex flex-col items-center justify-center gap-1 bg-amber/10 hover:bg-amber/20 border border-amber/40 text-amber px-6 py-2 rounded-full font-mono shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 active:scale-95"
+          className="group flex flex-col items-center justify-center gap-1 bg-slate-900 hover:bg-slate-800 border border-amber/40 text-amber px-6 py-2 rounded-full font-mono shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 active:scale-95"
         >
           <div className="flex items-center gap-2 text-sm">
             <Server className="h-4 w-4" />
