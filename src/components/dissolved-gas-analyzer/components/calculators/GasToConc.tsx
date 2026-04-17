@@ -108,7 +108,8 @@ export default function GasToConc() {
         ...seaState,
         reportingUnits,
         gasAllNames: completeGasList,
-        moleFractions: [...scaledMoleFractions, remainingFraction],
+        gasInputMoleFractions: [...scaledMoleFractions, remainingFraction],
+        systemType: systemType,
         ...(systemType === 'closed' && {
             systemType: 'closed',
             volWaterLiters: volWater,
@@ -128,7 +129,7 @@ export default function GasToConc() {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 
-      const res = await fetch(`${baseUrl}/bca-dissgas-calculator`, {
+      const res = await fetch(`${baseUrl}/bca-gas-mixing`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
