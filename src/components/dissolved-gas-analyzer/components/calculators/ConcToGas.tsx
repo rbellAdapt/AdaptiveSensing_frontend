@@ -34,8 +34,7 @@ export default function ConcToGas() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      fetch(`${baseUrl}/`, { method: 'HEAD' }).catch(() => {});
+      fetch('/api/gateway', { method: 'HEAD' }).catch(() => {});
     }
   };
 
@@ -52,16 +51,12 @@ export default function ConcToGas() {
         gasAllUnits: gasRows.map(r => r.unit)
       };
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
-
-      const res = await fetch(`${baseUrl}/bca-partial-pressure-calculator`, {
+      const res = await fetch('/api/gateway', {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          'X-API-KEY': apiKey
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ engine: 'conc_to_gas', parameters: payload })
       });
 
       if (!res.ok) throw new Error('API Calculation Failed');
