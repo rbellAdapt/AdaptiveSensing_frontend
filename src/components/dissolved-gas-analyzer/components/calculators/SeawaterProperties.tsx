@@ -3,14 +3,12 @@
 import { useState, useRef } from 'react';
 import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { ResultsTable } from '../ResultsTable';
-import { defaultSWResults } from '../ResultsDefaults';
+import { defaultSeawaterOnlyResults } from '../ResultsDefaults';
 import dynamic from 'next/dynamic';
-import { useAuthFunnel } from '@/components/AuthWrapper';
 
 const LocationMap = dynamic(() => import('../LocationMap'), { ssr: false });
 
 export default function SeawaterProperties() {
-  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -23,7 +21,7 @@ export default function SeawaterProperties() {
     press: 0
   });
 
-  const [results, setResults] = useState<any>(defaultSWResults);
+  const [results, setResults] = useState<any>(defaultSeawaterOnlyResults);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const wokeBackend = useRef(false);
@@ -31,7 +29,7 @@ export default function SeawaterProperties() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       fetch(`${baseUrl}/`, { method: 'HEAD' }).catch(() => {});
     }
   };
@@ -41,26 +39,16 @@ export default function SeawaterProperties() {
     setError('');
     wokeBackend.current = true;
     try {
-      // 1. Gateway Traffic Cop Ping (Rate Limit check)
-      const gatewayRes = await fetch('/api/gateway', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engine: 'seawater_properties', parameters: {} })
-      });
-      if (gatewayRes.status === 429) {
-        setLoading(false);
-        triggerPaywall();
-        return;
-      }
-
       const payload = { ...seaState };
 
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 
       const res = await fetch(`${baseUrl}/bca-seawater`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-API-KEY': apiKey
         },
         body: JSON.stringify(payload)
       });

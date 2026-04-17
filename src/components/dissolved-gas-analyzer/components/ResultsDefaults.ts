@@ -171,3 +171,5 @@ export const defaultConcToGasResults = {
   "nice name": "Gas Saturation"
 }
 };
+
+export const defaultSeawaterOnlyResults = defaultSWResults;

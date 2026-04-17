@@ -58,11 +58,16 @@ export default function RootLayout({
       >
         <NextAuthProvider>
           <AuthWrapper>
-            <Navigation />
-            <CloudRunPinger />
-            <main className="pt-16">
-              {children}
-            </main>
+            <div className="flex flex-col min-h-screen">
+              <Navigation />
+              <CloudRunPinger />
+              <main className="pt-16 flex-grow">
+                {children}
+              </main>
+              <footer className="w-full py-6 mt-12 text-center text-xs text-slate-500 font-mono border-t border-slate-800/50">
+                &copy; {new Date().getFullYear()} AdaptiveSensing.io | Built by Ryan Bell
+              </footer>
+            </div>
           </AuthWrapper>
           <Analytics />
         </NextAuthProvider>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 export interface SeawaterState {
   temp: number;
@@ -79,7 +79,7 @@ export function SeawaterConditions({ state, onChange, reportingUnit, onReporting
                 <select className="w-full h-full bg-transparent p-1.5 border-none outline-none focus:ring-1 focus:ring-cyan text-gray-300" value={state.atmPressUnits} onChange={(e) => updateField('atmPressUnits', e.target.value)}>
                   <option value="Pa">Pa</option>
                   <option value="kPa">kPa</option>
-                  <option value="hPa)">hPa</option>
+                  <option value="hPa">hPa</option>
                   <option value="atm">atm</option>
                   <option value="mbar">mbar</option>
                   <option value="inHg">inHg</option>

@@ -5,10 +5,8 @@ import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
 import { defaultConcToGasResults } from '../ResultsDefaults';
-import { useAuthFunnel } from '@/components/AuthWrapper';
 
 export default function ConcToGas() {
-  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -36,7 +34,7 @@ export default function ConcToGas() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       fetch(`${baseUrl}/`, { method: 'HEAD' }).catch(() => {});
     }
   };
@@ -46,18 +44,6 @@ export default function ConcToGas() {
     setError('');
     wokeBackend.current = true; // no need to wake if calculating
     try {
-      // 1. Gateway Traffic Cop Ping (Rate Limit check)
-      const gatewayRes = await fetch('/api/gateway', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engine: 'conc_to_gas', parameters: {} })
-      });
-      if (gatewayRes.status === 429) {
-        setLoading(false);
-        triggerPaywall();
-        return;
-      }
-
       const payload = {
         ...seaState,
         reportingUnits,
@@ -66,12 +52,14 @@ export default function ConcToGas() {
         gasAllUnits: gasRows.map(r => r.unit)
       };
 
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 
       const res = await fetch(`${baseUrl}/bca-partial-pressure-calculator`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-API-KEY': apiKey
         },
         body: JSON.stringify(payload)
       });
@@ -106,11 +94,22 @@ export default function ConcToGas() {
 
           <div className="flex flex-col mt-4 w-full">
              <div className="flex flex-row justify-center">
-               <button onClick={handleCalculate} disabled={loading} className="bg-cyan hover:bg-[#00cce6] text-[#0a0a0a] font-bold text-sm px-4 py-2 rounded shadow-sm transition-colors focus:outline-none w-48 disabled:opacity-50">
+               <button onClick={handleCalculate} disabled={loading} className="bg-cyan hover:bg-[#00cce6] text-[#0a0a0a] font-bold text-sm px-4 py-2 rounded shadow-sm transition-colors focus:outline-none w-48 disabled:opacity-50 mt-2">
                  {loading ? 'Processing...' : 'Recalculate'}
                </button>
              </div>
              {error && <div className="text-red-400 mt-2 font-mono text-xs text-center w-full">ERROR: {error}</div>}
+             
+             <div className="w-full max-w-[450px] p-4 mt-8 bg-[#fffbe6] border-l-4 border-[#ffcc00] text-[13px] leading-relaxed text-[#555] shadow-md">
+               <strong>Note:</strong> This calculator uses equilibrium formulas from academic literature that were intended for use with:
+               <ul className="mt-1 pl-5 list-disc">
+                   <li>Atmosphere-like gas compositions</li>
+                   <li>Barometric pressure near 1 atm</li>
+                   <li>Temperature between 0 and 30&deg;C</li>
+                   <li>Salinity between 0 and 40 psu</li>
+               </ul>
+               Using input values that go beyond these ranges will generate extrapolations with increasing levels of uncertainty due to non-ideal effects. The calculator requires mindful use.
+             </div>
           </div>
         </div>
 

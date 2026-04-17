@@ -5,10 +5,9 @@ import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow, GAS_OPTIONS } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
 import { defaultGasToConcResults } from '../ResultsDefaults';
-import { useAuthFunnel } from '@/components/AuthWrapper';
+import OriginWaterModal, { OriginSeawaterState } from '../OriginWaterModal';
 
 export default function GasToConc() {
-  const { triggerPaywall } = useAuthFunnel();
   const [seaState, setSeaState] = useState<SeawaterState>({
     temp: 10,
     tempUnits: '°C (ITS-90)',
@@ -28,6 +27,19 @@ export default function GasToConc() {
 
   const [reportingUnits, setReportingUnits] = useState('molarity');
   const [balanceGas, setBalanceGas] = useState('N2');
+
+  const [systemType, setSystemType] = useState<'open' | 'closed'>('open');
+  const [volWater, setVolWater] = useState(1.0);
+  const [volGas, setVolGas] = useState(100); // ml
+  const [numWashes, setNumWashes] = useState(1);
+  const [isOriginModalOpen, setIsOriginModalOpen] = useState(false);
+  const [originState, setOriginState] = useState<OriginSeawaterState>({
+    temp: 20, tempUnits: 'celsius90',
+    salt: 35, saltUnits: 'Salinity(PSS_78)',
+    atmPress: 1, atmPressUnits: 'atm',
+    gasFractions: {}
+  });
+
   const [results, setResults] = useState<any>(defaultGasToConcResults);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -36,7 +48,7 @@ export default function GasToConc() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       fetch(`${baseUrl}/`, { method: 'HEAD' }).catch(() => {});
     }
   };
@@ -46,18 +58,6 @@ export default function GasToConc() {
     setError('');
     wokeBackend.current = true;
     try {
-      // 1. Gateway Traffic Cop Ping (Rate Limit check)
-      const gatewayRes = await fetch('/api/gateway', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ engine: 'gas_to_conc', parameters: {} })
-      });
-      if (gatewayRes.status === 429) {
-        setLoading(false);
-        triggerPaywall();
-        return;
-      }
-
       const allNames = gasRows.map(r => r.name);
       if (new Set(allNames).size !== allNames.length) {
          throw new Error("Duplicate gases found in the table. Please combine or rename them.");
@@ -88,19 +88,51 @@ export default function GasToConc() {
         throw new Error(`Balance Gas (${balanceGas}) cannot also be listed as an explicit input. Please remove it from the table or pick a different balance gas.`);
       }
 
+      const completeGasList = [...allNames, balanceGas];
+
+      let waterInitialMoleFractions: (number|null)[] | undefined = undefined;
+      let usedCustomOrigin = false;
+      const mfs = completeGasList.map(gas => {
+        const val = originState.gasFractions[gas];
+        if (val !== undefined && val !== '') {
+            usedCustomOrigin = true;
+            return val as number;
+        }
+        return null;
+      });
+      if (usedCustomOrigin || originState.temp !== '' || originState.salt !== '' || originState.atmPress !== '') {
+        waterInitialMoleFractions = usedCustomOrigin ? mfs : undefined;
+      }
+
       const payload = {
         ...seaState,
         reportingUnits,
-        gasAllNames: [...allNames, balanceGas],
-        moleFractions: [...scaledMoleFractions, remainingFraction]
+        gasAllNames: completeGasList,
+        moleFractions: [...scaledMoleFractions, remainingFraction],
+        ...(systemType === 'closed' && {
+            systemType: 'closed',
+            volWaterLiters: volWater,
+            volGasLiters: volGas / 1000, // convert mL to L
+            numWashes: numWashes,
+            // Origin states
+            waterInitialTemp: originState.temp !== '' ? originState.temp : undefined,
+            waterInitialTempUnits: originState.temp !== '' ? originState.tempUnits : undefined,
+            waterInitialSalt: originState.salt !== '' ? originState.salt : undefined,
+            waterInitialSaltUnits: originState.salt !== '' ? originState.saltUnits : undefined,
+            waterInitialAtmPress: originState.atmPress !== '' ? originState.atmPress : undefined,
+            waterInitialAtmPressUnits: originState.atmPress !== '' ? originState.atmPressUnits : undefined,
+            waterInitialMoleFractions: waterInitialMoleFractions
+        })
       };
 
-      const baseUrl = '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 
       const res = await fetch(`${baseUrl}/bca-dissgas-calculator`, {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-API-KEY': apiKey
         },
         body: JSON.stringify(payload)
       });
@@ -137,16 +169,78 @@ export default function GasToConc() {
               {GAS_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
             </select>
           </div>
+
+          <table className="w-full max-w-[500px] text-sm border-collapse border border-gray-700 bg-gray-800/80 mb-4 mt-2">
+            <tbody>
+              <tr>
+                <td className="border border-gray-700 p-2 font-bold text-gray-200">System Type</td>
+                <td className="border border-gray-700 p-0" colSpan={2}>
+                  <select 
+                    className="w-full h-full bg-transparent p-2 border-none outline-none focus:ring-1 focus:ring-cyan text-cyan font-bold" 
+                    value={systemType} 
+                    onChange={e => setSystemType(e.target.value as 'open'|'closed')}
+                  >
+                    <option value="open">Open (Constant Equil.)</option>
+                    <option value="closed">Closed (Finite Volume)</option>
+                  </select>
+                </td>
+              </tr>
+              {systemType === 'closed' && (
+                <>
+                  <tr className="bg-[#1a2e45]">
+                    <td className="border border-gray-700 p-2 text-gray-300">Water Volume</td>
+                    <td className="border border-gray-700 p-0">
+                      <input type="number" step="any" className="w-full h-full bg-transparent p-2 border-none outline-none focus:ring-1 focus:ring-cyan text-cyan" value={volWater} onChange={e => setVolWater(parseFloat(e.target.value)||0)} />
+                    </td>
+                    <td className="border border-gray-700 p-2 text-gray-400 text-xs">Liters</td>
+                  </tr>
+                  <tr className="bg-[#1a2e45]">
+                    <td className="border border-gray-700 p-2 text-gray-300">Feed Gas Volume</td>
+                    <td className="border border-gray-700 p-0">
+                      <input type="number" step="any" className="w-full h-full bg-transparent p-2 border-none outline-none focus:ring-1 focus:ring-cyan text-cyan" value={volGas} onChange={e => setVolGas(parseFloat(e.target.value)||0)} />
+                    </td>
+                    <td className="border border-gray-700 p-2 text-gray-400 text-xs">mL</td>
+                  </tr>
+                  <tr className="bg-[#1a2e45]">
+                    <td className="border border-gray-700 p-2 text-gray-300">Num Washes</td>
+                    <td className="border border-gray-700 p-0">
+                      <input type="number" step="any" className="w-full h-full bg-transparent p-2 border-none outline-none focus:ring-1 focus:ring-cyan text-cyan" value={numWashes} onChange={e => setNumWashes(parseFloat(e.target.value)||0)} />
+                    </td>
+                    <td className="border border-gray-700 p-2 text-gray-400 text-xs">Times</td>
+                  </tr>
+                  <tr className="bg-[#1a2e45]">
+                    <td className="border border-gray-700 p-2 text-gray-300">Origin Water</td>
+                    <td className="border border-gray-700 p-1 text-center" colSpan={2}>
+                      <button onClick={() => setIsOriginModalOpen(true)} className="w-full text-xs bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200 py-1.5 rounded transition">
+                        Configure Initial Gases
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              )}
+            </tbody>
+          </table>
           
           <GasEntryTable rows={gasRows} onChange={setGasRows} mode="fraction" />
 
           <div className="flex flex-col mt-4 w-full">
              <div className="flex flex-row justify-center">
-               <button onClick={handleCalculate} disabled={loading} className="bg-cyan hover:bg-[#00cce6] text-[#0a0a0a] font-bold text-sm px-4 py-2 rounded shadow-sm transition-colors focus:outline-none w-48 disabled:opacity-50">
+               <button onClick={handleCalculate} disabled={loading} className="bg-cyan hover:bg-[#00cce6] text-[#0a0a0a] font-bold text-sm px-4 py-2 rounded shadow-sm transition-colors focus:outline-none w-48 disabled:opacity-50 mt-2">
                  {loading ? 'Processing...' : 'Recalculate'}
                </button>
              </div>
              {error && <div className="text-red-400 mt-2 font-mono text-xs text-center w-full">ERROR: {error}</div>}
+             
+             <div className="w-full max-w-[450px] p-4 mt-8 bg-[#fffbe6] border-l-4 border-[#ffcc00] text-[13px] leading-relaxed text-[#555] shadow-md">
+               <strong>Note:</strong> This calculator uses equilibrium formulas from academic literature that were intended for use with:
+               <ul className="mt-1 pl-5 list-disc">
+                   <li>Atmosphere-like gas compositions</li>
+                   <li>Barometric pressure near 1 atm</li>
+                   <li>Temperature between 0 and 30&deg;C</li>
+                   <li>Salinity between 0 and 40 psu</li>
+               </ul>
+               Using input values that go beyond these ranges will generate extrapolations with increasing levels of uncertainty due to non-ideal effects. The calculator requires mindful use.
+             </div>
           </div>
         </div>
 
@@ -155,6 +249,14 @@ export default function GasToConc() {
            {results && <ResultsTable data={results} mode="fraction" />}
         </div>
       </div>
+
+      <OriginWaterModal 
+        isOpen={isOriginModalOpen} 
+        onClose={() => setIsOriginModalOpen(false)} 
+        state={originState} 
+        onChange={setOriginState} 
+        activeGases={[...gasRows.map(r => r.name), balanceGas]}
+      />
     </div>
   );
 }

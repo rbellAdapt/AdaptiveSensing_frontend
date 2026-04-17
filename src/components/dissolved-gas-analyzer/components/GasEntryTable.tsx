@@ -32,20 +32,39 @@ const FRACTION_UNITS = [
 ];
 
 export function GasEntryTable({ rows, onChange, mode }: GasEntryTableProps) {
+  const [contextMenu, setContextMenu] = React.useState<{x: number, y: number, index: number} | null>(null);
+
+  React.useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, []);
+
   const updateRow = (index: number, field: keyof GasRow, val: string | number) => {
     const newRows = [...rows];
     newRows[index] = { ...newRows[index], [field]: val };
     onChange(newRows);
   };
 
-  const addRow = () => {
-    onChange([...rows, { name: 'C2H6', value: 0.1, unit: mode === 'conc' ? 'molarity' : 'Percent' }]);
+  const insertRowBelow = () => {
+    if (contextMenu === null) return;
+    const newRows = [...rows];
+    newRows.splice(contextMenu.index + 1, 0, { name: 'C2H6', value: 0.1, unit: mode === 'conc' ? 'molarity' : 'Percent' });
+    onChange(newRows);
   };
 
   const deleteRow = () => {
-    if (rows.length > 1) { // Prevent deleting all rows
-      onChange(rows.slice(0, rows.length - 1));
+    if (contextMenu === null) return;
+    if (rows.length > 1) { 
+      const newRows = [...rows];
+      newRows.splice(contextMenu.index, 1);
+      onChange(newRows);
     }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, index: number) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, index });
   };
 
   return (
@@ -65,7 +84,7 @@ export function GasEntryTable({ rows, onChange, mode }: GasEntryTableProps) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i}>
+            <tr key={i} onContextMenu={(e) => handleContextMenu(e, i)} className="hover:bg-gray-800/50 transition-colors">
               <td className="border border-gray-700 p-0">
                 <select className="w-full h-full bg-transparent p-1.5 border-none outline-none focus:ring-1 focus:ring-cyan text-gray-300" value={row.name} onChange={(e) => updateRow(i, 'name', e.target.value)}>
                   {GAS_OPTIONS.map(g => <option key={g} value={g}>{g}</option>)}
@@ -90,14 +109,19 @@ export function GasEntryTable({ rows, onChange, mode }: GasEntryTableProps) {
         </tbody>
       </table>
       
-      <div className="flex flex-row gap-3 mt-4 items-center max-w-[500px]">
-        <button onClick={addRow} className="bg-gray-800 hover:bg-gray-700 text-white text-sm px-3 py-1 rounded shadow-sm transition-colors border border-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan">
-          Add Row
-        </button>
-        <button onClick={deleteRow} className="bg-gray-800 hover:bg-gray-700 text-white text-sm px-3 py-1 rounded shadow-sm transition-colors border border-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan" disabled={rows.length <= 1}>
-          Delete Row
-        </button>
-      </div>
+      {contextMenu && (
+        <div 
+          className="fixed bg-white border border-gray-300 shadow-md z-[1000] flex flex-col w-[150px] text-[#0a0a0a]"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <div className="p-2 cursor-pointer text-sm hover:bg-cyan/20 transition-colors" onClick={insertRowBelow}>
+            Insert Row Below
+          </div>
+          <div className="p-2 cursor-pointer text-sm hover:bg-cyan/20 transition-colors" onClick={deleteRow}>
+            Delete Row
+          </div>
+        </div>
+      )}
     </div>
   );
 }
