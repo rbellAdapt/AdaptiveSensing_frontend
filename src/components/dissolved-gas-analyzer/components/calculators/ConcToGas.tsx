@@ -34,7 +34,7 @@ export default function ConcToGas() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      fetch('/api/gateway', { method: 'HEAD' }).catch(() => {});
+      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
     }
   };
 
@@ -44,6 +44,7 @@ export default function ConcToGas() {
     wokeBackend.current = true; // no need to wake if calculating
     try {
       const payload = {
+        _route: 'bca-partial-pressure-calculator',
         ...seaState,
         reportingUnits,
         gasAllNames: gasRows.map(r => r.name),
@@ -51,12 +52,12 @@ export default function ConcToGas() {
         gasAllUnits: gasRows.map(r => r.unit)
       };
 
-      const res = await fetch('/api/gateway', {
+      const res = await fetch(`/api/bca-calculate`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ engine: 'conc_to_gas', parameters: payload })
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error('API Calculation Failed');

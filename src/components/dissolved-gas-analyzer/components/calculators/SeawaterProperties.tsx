@@ -29,7 +29,7 @@ export default function SeawaterProperties() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      fetch('/api/gateway', { method: 'HEAD' }).catch(() => {});
+      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
     }
   };
 
@@ -38,14 +38,17 @@ export default function SeawaterProperties() {
     setError('');
     wokeBackend.current = true;
     try {
-      const payload = { ...seaState };
+      const payload = { 
+        _route: 'bca-seawater',
+        ...seaState 
+      };
 
-      const res = await fetch('/api/gateway', {
+      const res = await fetch(`/api/bca-calculate`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ engine: 'seawater_properties', parameters: payload })
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error('API Calculation Failed');

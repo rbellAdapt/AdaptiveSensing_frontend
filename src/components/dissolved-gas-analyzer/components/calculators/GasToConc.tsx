@@ -48,7 +48,7 @@ export default function GasToConc() {
   const wakeBackend = () => {
     if (!wokeBackend.current) {
       wokeBackend.current = true;
-      fetch('/api/gateway', { method: 'HEAD' }).catch(() => {});
+      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
     }
   };
 
@@ -104,6 +104,7 @@ export default function GasToConc() {
       }
 
       const payload = {
+        _route: 'bca-gas-mixing',
         ...seaState,
         reportingUnits,
         gasAllNames: completeGasList,
@@ -125,12 +126,12 @@ export default function GasToConc() {
         })
       };
 
-      const res = await fetch('/api/gateway', {
+      const res = await fetch(`/api/bca-calculate`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ engine: 'gas_mixing', parameters: payload })
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error('API Calculation Failed');
