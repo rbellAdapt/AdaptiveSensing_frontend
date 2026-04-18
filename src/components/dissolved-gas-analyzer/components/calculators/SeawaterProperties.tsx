@@ -38,7 +38,7 @@ export default function SeawaterProperties() {
     setError('');
     wokeBackend.current = true;
     try {
-      const payload = { 
+      const payload = {
         _route: 'bca-seawater',
         ...seaState 
       };
