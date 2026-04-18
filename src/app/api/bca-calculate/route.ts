@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json();
     const endpoint = payload._route || 'bca-gas-mixing';
-    
+
     // Explicitly strip the internal routing param before forwarding
     delete payload._route;
 

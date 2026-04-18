@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json();
     const endpoint = payload._route || 'bca-gas-mixing';
-    
+
     // Explicitly strip the internal routing param before forwarding
     delete payload._route;
 
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function HEAD() {
+export async function HEAD(request: Request) {
   try {
     const baseUrl = process.env.BCA_API_URL || 'http://localhost:8000';
     await fetch(`${baseUrl}/health`, { method: 'GET' });
