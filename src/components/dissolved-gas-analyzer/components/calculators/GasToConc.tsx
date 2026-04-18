@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow, GAS_OPTIONS } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
-import { defaultGasToConcResults } from '../ResultsDefaults';
 import OriginWaterModal, { OriginSeawaterState } from '../OriginWaterModal';
 
 export default function GasToConc() {
@@ -40,22 +39,13 @@ export default function GasToConc() {
     gasFractions: {}
   });
 
-  const [results, setResults] = useState<any>(defaultGasToConcResults);
+  const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const wokeBackend = useRef(false);
-
-  const wakeBackend = () => {
-    if (!wokeBackend.current) {
-      wokeBackend.current = true;
-      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
-    }
-  };
 
   const handleCalculate = async () => {
     setLoading(true);
     setError('');
-    wokeBackend.current = true;
     try {
       const allNames = gasRows.map(r => r.name);
       if (new Set(allNames).size !== allNames.length) {
@@ -144,13 +134,20 @@ export default function GasToConc() {
     }
   };
 
+  // Natively trigger initial calculation sequence entirely automatically 
+  // on component mount to sync UI inputs exactly with mathematically verified states
+  useEffect(() => {
+    handleCalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto text-white">
       <div className="text-center mb-2">
         <h2 className="text-lg text-gray-400 font-sans">Partial Pressure &rarr; Aqueous Concentration</h2>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full" onFocusCapture={wakeBackend}>
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
         {/* INPUTS CONTAINER */}
         <div className="flex flex-col items-center w-full max-w-[450px]">
           <SeawaterConditions 

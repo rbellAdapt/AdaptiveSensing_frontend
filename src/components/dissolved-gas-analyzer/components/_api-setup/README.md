@@ -20,3 +20,15 @@ To maintain strict security compliance, the React Component logic in this folder
    ```
 
 Because these variables lack a `NEXT_PUBLIC_` prefix, they will remain mathematically hidden from any client-side JavaScript bundle.
+
+---
+
+## Required Dependencies
+
+Because the React Components in this directory utilize advanced visual graphing and geographic coordinate mapping, your Next.js workspace must physically install the following exact NPM packages before you attempt a production build:
+
+```bash
+npm install leaflet @types/leaflet react-leaflet plotly.js-basic-dist react-plotly.js @types/react-plotly.js
+```
+
+If these are not installed, the `LocationMap` and `ResultsTable` components will fail to compile.

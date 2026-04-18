@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { GasEntryTable, GasRow } from '../GasEntryTable';
 import { ResultsTable } from '../ResultsTable';
-import { defaultConcToGasResults } from '../ResultsDefaults';
 
 export default function ConcToGas() {
   const [seaState, setSeaState] = useState<SeawaterState>({
@@ -26,22 +25,13 @@ export default function ConcToGas() {
   ]);
 
   const [reportingUnits, setReportingUnits] = useState('Percent');
-  const [results, setResults] = useState<any>(defaultConcToGasResults);
+  const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const wokeBackend = useRef(false);
-
-  const wakeBackend = () => {
-    if (!wokeBackend.current) {
-      wokeBackend.current = true;
-      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
-    }
-  };
 
   const handleCalculate = async () => {
     setLoading(true);
     setError('');
-    wokeBackend.current = true; // no need to wake if calculating
     try {
       const payload = {
         _route: 'bca-partial-pressure-calculator',
@@ -70,13 +60,18 @@ export default function ConcToGas() {
     }
   };
 
+  useEffect(() => {
+    handleCalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto text-white">
       <div className="text-center mb-2">
         <h2 className="text-lg text-gray-400 font-sans">Aqueous Concentration &rarr; Partial Pressure</h2>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full" onFocusCapture={wakeBackend}>
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
         {/* INPUTS CONTAINER */}
         <div className="flex flex-col items-center w-full max-w-[450px]">
           <SeawaterConditions 

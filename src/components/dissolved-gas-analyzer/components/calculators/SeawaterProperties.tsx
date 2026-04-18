@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SeawaterConditions, SeawaterState } from '../SeawaterConditions';
 import { ResultsTable } from '../ResultsTable';
-import { defaultSeawaterOnlyResults } from '../ResultsDefaults';
 import dynamic from 'next/dynamic';
 
 const LocationMap = dynamic(() => import('../LocationMap'), { ssr: false });
@@ -21,22 +20,13 @@ export default function SeawaterProperties() {
     press: 0
   });
 
-  const [results, setResults] = useState<any>(defaultSeawaterOnlyResults);
+  const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const wokeBackend = useRef(false);
-
-  const wakeBackend = () => {
-    if (!wokeBackend.current) {
-      wokeBackend.current = true;
-      fetch(`/api/bca-calculate`, { method: 'HEAD' }).catch(() => {});
-    }
-  };
 
   const handleCalculate = async () => {
     setLoading(true);
     setError('');
-    wokeBackend.current = true;
     try {
       const payload = {
         _route: 'bca-seawater',
@@ -61,13 +51,18 @@ export default function SeawaterProperties() {
     }
   };
 
+  useEffect(() => {
+    handleCalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto text-white">
       <div className="text-center mb-2">
         <h2 className="text-lg text-gray-400 font-sans">Seawater Properties and Dissolved Gas Calculator</h2>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full" onFocusCapture={wakeBackend}>
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start w-full">
         <div className="flex flex-col items-center w-full max-w-[450px]">
           <SeawaterConditions 
             state={seaState} 
