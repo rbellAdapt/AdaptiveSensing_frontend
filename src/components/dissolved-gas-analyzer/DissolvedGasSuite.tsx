@@ -74,9 +74,15 @@ export default function DissolvedGasSuite() {
       </div>
 
       <div className="w-full flex-grow flex justify-center">
-        {activeTab === 'seawater' && <SeawaterProperties />}
-        {activeTab === 'gasToConc' && <GasToConc />}
-        {activeTab === 'concToGas' && <ConcToGas />}
+        <div className={activeTab === 'seawater' ? 'block w-full' : 'hidden'}>
+          <SeawaterProperties />
+        </div>
+        <div className={activeTab === 'gasToConc' ? 'block w-full' : 'hidden'}>
+          <GasToConc />
+        </div>
+        <div className={activeTab === 'concToGas' ? 'block w-full' : 'hidden'}>
+          <ConcToGas />
+        </div>
       </div>
       <SourcesModal isOpen={isSourcesOpen} onClose={() => setIsSourcesOpen(false)} />
     </div>

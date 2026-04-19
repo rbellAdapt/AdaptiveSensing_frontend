@@ -23,6 +23,28 @@ Because these variables lack a `NEXT_PUBLIC_` prefix, they will remain mathemati
 
 ---
 
+## UI Architecture: Tab Toggling & CSS Mounting
+
+Because these React Calculators execute an isolated `useEffect` cascade to retrieve their initial default data natively from the API exactly once upon mounting, **you must not use React conditional rendering to swap tabs!**
+
+If your website builds a tab interface using strict React boolean short-circuit logic:
+```tsx
+// ❌ WRONG (Prevents background initialization)
+{activeTab === 'gas' && <GasToConc />}
+```
+The inactive calculators will functionally not exist in the DOM, meaning they will absolutely not initialize their mathematical states until the user physically visits them!
+
+To force all three calculators to fetch their backend defaults seamlessly in parallel the exact second your webpage opens, you must use **CSS Visibility Toggling**:
+```tsx
+// ✅ CORRECT (Forces simultaneous execution)
+<div className={activeTab === 'gas' ? 'block' : 'hidden'}>
+   <GasToConc />
+</div>
+```
+Mounting all 3 explicitly with CSS toggle overlays (`display: none`) identically fulfills visual aesthetics while allowing the React `useEffect` engines to hydrate their results continuously in the background!
+
+---
+
 ## Required Dependencies
 
 Because the React Components in this directory utilize advanced visual graphing and geographic coordinate mapping, your Next.js workspace must physically install the following exact NPM packages before you attempt a production build:
@@ -32,3 +54,18 @@ npm install leaflet @types/leaflet react-leaflet plotly.js-basic-dist react-plot
 ```
 
 If these are not installed, the `LocationMap` and `ResultsTable` components will fail to compile.
+
+---
+
+## Troubleshooting: Vercel Compilation Artifacts
+
+If you push the new components to Vercel but the browser still attempts to hit the backend directly (e.g., you see a `GET` request to the Cloud Run URL in the Network Inspector throwing a `404`), Vercel's Build Cache is heavily persisting older Webpack compiled chunks. 
+
+**To resolve this immediately:**
+1. Open your Vercel Dashboard and go to your **Project -> Deployments** tab.
+2. Click the three dots (`...`) next to your most recent deployment.
+3. Select **Redeploy**.
+4. In the confirmation modal, **strictly UNCHECK** the box that says "Use existing Build Cache".
+5. Click **Redeploy**.
+
+This forces Vercel to spin up a clean node, bypass the old `.next` cache, and correctly construct the strict Next.js API Proxy routing boundaries.
