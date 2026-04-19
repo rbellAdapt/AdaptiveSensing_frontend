@@ -41,7 +41,6 @@ export const metadata: Metadata = {
 };
 
 import Navigation from "@/components/ui/Navigation";
-import CloudRunPinger from "@/components/ui/CloudRunPinger";
 import { Analytics } from "@vercel/analytics/next";
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 import { AuthWrapper } from '@/components/AuthWrapper';
@@ -60,7 +59,6 @@ export default function RootLayout({
           <AuthWrapper>
             <div className="flex flex-col min-h-screen">
               <Navigation />
-              <CloudRunPinger />
               <main className="pt-16 flex-grow">
                 {children}
               </main>
