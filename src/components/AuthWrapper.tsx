@@ -75,22 +75,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     <AuthContext.Provider value={{ triggerPaywall, triggerEnterpriseModal, triggerGeneralModal }}>
       <div className="relative w-full h-full min-h-screen">
 
-        {/* Status Indicator (Optional but good UX) */}
-        {isInteractiveToolRoute && (
-          <div className="absolute top-4 right-4 z-50 text-xs font-mono flex items-center border border-cyan/20 bg-slate-900/50 px-3 py-1 rounded-full backdrop-blur-md text-cyan/70">
-            {isAuthenticated ? (
-              <>
-                Logged in as {session?.user?.email}
-                <button onClick={() => signOut()} className="ml-3 text-slate-500 hover:text-red-400 focus:outline-none">Log Out</button>
-              </>
-            ) : (
-              <button onClick={() => signIn("google")} className="flex items-center hover:text-cyan transition-colors focus:outline-none">
-                <Mail className="h-3 w-3 mr-1.5" />
-                Sign In
-              </button>
-            )}
-          </div>
-        )}
+        {/* Status Indicator logic has been migrated natively into Navigation.tsx */}
 
         {/* The isolated Tool UI */}
         <div className={(showPaywall || showEnterpriseModal || showGeneralModal) ? "pointer-events-none blur-md transition-all duration-500 select-none opacity-50" : "transition-all duration-500"}>

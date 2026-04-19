@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { useState, useRef } from 'react';
+import { useSession, signIn, signOut } from "next-auth/react";
+import { Mail } from "lucide-react";
 
 export default function Navigation() {
+  const { data: session, status } = useSession();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -73,6 +76,23 @@ export default function Navigation() {
             <Link href="/about" className="text-slate-300 hover:text-cyan transition-colors px-3 py-2">
               About
             </Link>
+
+            {/* NextAuth Integrated Status */}
+            <div className="ml-4 flex items-center border-l border-slate-700/50 pl-6">
+              {status === "authenticated" ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono text-cyan/70">{session?.user?.email}</span>
+                  <button onClick={() => signOut()} className="text-xs text-slate-500 hover:text-red-400 focus:outline-none transition-colors">
+                    Log Out
+                  </button>
+                </div>
+              ) : (
+                <button onClick={() => signIn("google")} className="flex items-center text-xs text-slate-400 hover:text-cyan transition-colors focus:outline-none bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-full hover:border-cyan/50">
+                  <Mail className="h-3 w-3 mr-1.5" />
+                  Sign In
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -111,6 +131,23 @@ export default function Navigation() {
             </div>
 
             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-slate-300 hover:text-cyan hover:bg-slate-800 transition-colors mt-2 border-t border-slate-800 pt-2">About</Link>
+            
+            {/* Mobile Auth Button */}
+            <div className="mt-2 text-xs border-t border-slate-800 pt-3 flex flex-col px-3">
+              {status === "authenticated" ? (
+                 <>
+                   <span className="text-cyan/70 mb-2 truncate">Logged in: {session?.user?.email}</span>
+                   <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="text-left py-2 font-bold text-slate-500 hover:text-red-400 transition-colors rounded-md hover:bg-slate-800 px-2 -mx-2">
+                     Log Out
+                   </button>
+                 </>
+              ) : (
+                 <button onClick={() => { signIn("google"); setIsMobileMenuOpen(false); }} className="flex items-center font-bold text-slate-400 hover:text-cyan transition-colors py-2 rounded-md hover:bg-slate-800 px-2 -mx-2">
+                   <Mail className="h-4 w-4 mr-2" />
+                   Sign In
+                 </button>
+              )}
+            </div>
           </div>
         </div>
       )}
